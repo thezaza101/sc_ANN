@@ -1,10 +1,10 @@
 ﻿using System;
 using Avalonia;
 using Avalonia.Logging.Serilog;
-using sc_ANN.ViewModels;
-using sc_ANN.Views;
+using ui.ViewModels;
+using ui.Views;
 
-namespace sc_ANN
+namespace ui
 {
     class Program
     {

@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Markup.Xaml;
 
-namespace sc_ANN
+namespace ui
 {
     public class App : Application
     {

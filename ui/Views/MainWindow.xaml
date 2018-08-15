@@ -1,8 +1,8 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:sc_ANN.ViewModels;assembly=sc_ANN"
-        Icon="resm:sc_ANN.Assets.avalonia-logo.ico"
-        Title="sc_ANN">
+        xmlns:vm="clr-namespace:ui.ViewModels;assembly=ui"
+        Icon="resm:ui.Assets.avalonia-logo.ico"
+        Title="ui">
 
   <Design.DataContext>
     <vm:MainWindowViewModel/>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace sc_ANN.ViewModels
+namespace ui.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
