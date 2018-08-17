@@ -4,6 +4,7 @@ namespace helpers
     {
         FeatureScalingMinMax,
         FeatureScalingMean,
-        FeatureScalingStandardization
+        FeatureScalingStandardization,
+        StandardScore
     }
 }

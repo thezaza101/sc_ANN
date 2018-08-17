@@ -19,12 +19,15 @@ namespace cli
             Console.WriteLine();
             Console.WriteLine("Normalizeing Data...");
 
-            data.Normalize(0);
-            data.Normalize(1);
+            data.Normalize(0,NormalizationMethod.StandardScore);
+            data.Normalize(1,NormalizationMethod.FeatureScalingStandardization);
+            data.Normalize(2,NormalizationMethod.FeatureScalingMinMax);
+            data.Normalize(3,NormalizationMethod.FeatureScalingMean);
+
 
             Console.WriteLine();
 
-            Console.WriteLine(data.Head(5,20));
+            Console.WriteLine(data.Head(20,20));
 
             Console.WriteLine();
             Console.WriteLine("Sorting Data (0, acen)...");
