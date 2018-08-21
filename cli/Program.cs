@@ -7,7 +7,7 @@ namespace cli
     {
         static void Main(string[] args)
         {
-            MatrixData<double> data = new MatrixData<double>("iris - Copy.Txt", false,' ');
+            MatrixData data = new MatrixData("iris - Copy.Txt", false,' ');
             data.ChangeHeader(0,"Speal.Length");
             data.ChangeHeader(1,"Speal.Width");
             data.ChangeHeader(2,"Petal.Length");

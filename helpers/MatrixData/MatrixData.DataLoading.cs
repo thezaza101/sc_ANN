@@ -7,7 +7,7 @@ using System.Text;
 
 namespace helpers
 {
-    public partial class MatrixData<T>
+    public partial class MatrixData
     {
         //This method reads a CSV file and sets the data.
         public void ReadFromCSV(string filelocation, bool hasHeaders, char delimiter)
@@ -20,17 +20,56 @@ namespace helpers
             NumberOfRows = lines.Length-rowStartIndex;
             NumberOfColumns = _headers.Length;
 
-            _data = new T[NumberOfRows,NumberOfColumns];
+            _data = new object[NumberOfRows,NumberOfColumns];
+            
             for (int row = rowStartIndex; row<lines.Length; row++)
             {
                 string[] data = SplitCsvLine(lines[row],delimiter);
                 for(int col = 0; col < NumberOfColumns; col++)
                 {
-                    _data[row-rowStartIndex,col] = Convert(data[col]);
+                    _data[row-rowStartIndex,col] = data[col];
                 }
             }
-             
+
+            SetHeaders();
+
+            for(int col = 0; col < NumberOfColumns; col++)
+            {
+                if (IsValueNumaric(col))
+                {
+                    for (int row = 0; row<NumberOfRows; row++)
+                    {      
+                        _data[row,col] = ConvertToNumeric(_data[row,col].ToString());
+                    }
+                }
+                
+            }
         }
+        private void SetHeaders()
+        {
+            _columnDataTypes = new Type[NumberOfColumns];
+            for (int col = 0; col < NumberOfColumns; col++)
+            {
+                _columnDataTypes[col] = DetermineColType(col);
+            }
+        }
+        private Type DetermineColType(int col)
+        {
+            bool isValueNumaric = true;
+            try
+            {
+                for (int row = 0; row < NumberOfRows; row++)
+                {
+                    var o = ConvertToNumeric(_data[row,col].ToString());
+                }
+            } 
+            catch (NotSupportedException)
+            {
+                isValueNumaric = false;
+            }
+            return (isValueNumaric)? typeof(double) : typeof(string);            
+        }
+
 
         //This set the header values if the file has headers
         private void SetHeaders(string headersLine, bool hasHeaders, char delimiter)

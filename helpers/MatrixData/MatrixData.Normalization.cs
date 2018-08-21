@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace helpers
 {
-    public partial class MatrixData<T>
+    public partial class MatrixData
     {
         //attempt to normalize a numaric column
         public void Normalize(int col, NormalizationMethod method = NormalizationMethod.StandardScore)
@@ -12,7 +12,7 @@ namespace helpers
             //https://docs.microsoft.com/en-us/azure/machine-learning/studio-module-reference/normalize-data
             //https://en.wikipedia.org/wiki/Normalization_(statistics)
             //https://en.wikipedia.org/wiki/Feature_scaling
-            if(IsValueNumaric(_data[0,col]))
+            if(IsValueNumaric(col))
             {
                 switch (method)
                 {
@@ -32,24 +32,27 @@ namespace helpers
                         throw new Exception("How did you even get here? Please let the monkey that"+
                         "coded this know the following: \"MatrixData<T>.Normalize.default\", along with"+
                         "what you did to cause this error");
-                }
-                
+                }                
+            }
+            else 
+            {
+                throw new InvalidOperationException("Cannot preform normalization on non-numaric column");
             }
         }
         private void PreformStandardScoreNormalization(int col)
         {
-                //https://en.wikipedia.org/wiki/Standard_score
-                double min = Min(col);
-                double max = Max(col);
-                
-                double mult = 1 / (max - min);
-                
-                for (int row = 0; row < NumberOfRows; row++)
-                {
-                    double currentVal = double.Parse(_data[row,col].ToString());
-                    currentVal = (currentVal - min) * mult;
-                    _data[row,col] = Convert(currentVal.ToString());
-                }
+            //https://en.wikipedia.org/wiki/Standard_score
+            double min = Min(col);
+            double max = Max(col);
+            
+            double mult = 1 / (max - min);
+            
+            for (int row = 0; row < NumberOfRows; row++)
+            {
+                double currentVal = (double)_data[row,col];
+                currentVal = (currentVal - min) * mult;
+                _data[row,col] = ConvertToNumeric(currentVal.ToString());
+            }
         }
 
         private void PreformMinMaxNormalization(int col)
@@ -59,9 +62,9 @@ namespace helpers
             double max = Max(col);
             for (int row = 0; row < NumberOfRows; row++)
             {
-                double currentVal = double.Parse(_data[row,col].ToString());
+                double currentVal = (double)_data[row,col];
                 currentVal = (currentVal - min) / (max - min);
-                _data[row,col] = Convert(currentVal.ToString());
+                _data[row,col] = ConvertToNumeric(currentVal.ToString());
             }
         }
 
@@ -74,9 +77,9 @@ namespace helpers
 
             for (int row = 0; row < NumberOfRows; row++)
             {
-                double currentVal = double.Parse(_data[row,col].ToString());
+                double currentVal = (double)_data[row,col];
                 currentVal = (currentVal - mean) / (max - min);
-                _data[row,col] = Convert(currentVal.ToString());
+                _data[row,col] = ConvertToNumeric(currentVal.ToString());
             }
         }
 
@@ -88,13 +91,13 @@ namespace helpers
         //Finds the minimum value for the given column
         public double Min(int col)
         {
-            if(IsValueNumaric(_data[0,col]))
+            if(IsValueNumaric(col))
             {
-                double min = double.Parse(_data[0,col].ToString());            
+                double min = (double)_data[0,col];            
                 //find the minimum value in the column
                 for (int row = 1; row < NumberOfRows; row++)
                 {
-                    double currentVal = double.Parse(_data[row,col].ToString());
+                    double currentVal = (double)_data[row,col];
                     min = (currentVal < min)? currentVal : min;
                 }
                 return min;
@@ -107,13 +110,13 @@ namespace helpers
         //Finds the maximum value for the given column
         public double Max(int col)
         {
-            if(IsValueNumaric(_data[0,col]))
+            if(IsValueNumaric(col))
             {
-                double max = double.Parse(_data[0,col].ToString());            
+                double max = (double)_data[0,col];           
                 //find the maximum value in the column
                 for (int row = 1; row < NumberOfRows; row++)
                 {
-                    double currentVal = double.Parse(_data[row,col].ToString());
+                    double currentVal = (double)_data[row,col];
                     max = (currentVal > max)? currentVal : max;
                 }
                 return max;
@@ -127,7 +130,7 @@ namespace helpers
         //Find the Mean (average) value for the given column
         public double Mean(int col)
         {
-            if(IsValueNumaric(_data[0,col]))
+            if(IsValueNumaric(col))
             {
                 return Sum(col) / NumberOfRows;
             }
@@ -139,12 +142,12 @@ namespace helpers
         //Find the sum of a column
         public double Sum (int col)
         {
-            if(IsValueNumaric(_data[0,col]))
+            if(IsValueNumaric(col))
             {
                 double sum = 0;
                 for (int row = 0; row < NumberOfRows; row++)
                 {
-                    sum+= double.Parse(_data[row,col].ToString());
+                    sum+= (double)_data[row,col];
                 }
                 return sum;
             }
@@ -154,13 +157,13 @@ namespace helpers
             }
         }
         //Determines if the input value is numaric
-        private bool IsValueNumaric(T value)
+        private bool IsValueNumaric(int col)
         {
             List<Type> numaricTypes = new List<Type>();
             numaricTypes.Add(typeof(double));
             numaricTypes.Add(typeof(int));
             numaricTypes.Add(typeof(decimal));
-            return numaricTypes.Contains(value.GetType());
+            return numaricTypes.Contains(_columnDataTypes[col]);
         }
     }
 }

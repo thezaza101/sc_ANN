@@ -7,7 +7,7 @@ using System.Text;
 
 namespace helpers
 {
-    public partial class MatrixData<T>
+    public partial class MatrixData
     {
         //This represents the headers of the maxtrix information
         public string[] Headers
@@ -17,7 +17,14 @@ namespace helpers
                 return _headers;
             }
         }
-        public T[,] Data
+        public Type[] ColumnDataTypes
+        {
+            get
+            {
+                return _columnDataTypes;
+            }
+        }
+        public object[,] Data
         {
             get
             {
@@ -27,17 +34,22 @@ namespace helpers
 
         public int NumberOfRows{get;private set;}
         public int NumberOfColumns{get;private set;}
-
+        public Type DefaultNumericType {get; private set;} = typeof(double);
 
         private string[] _headers;
-        private T[,] _data;
+        private Type[] _columnDataTypes;
+        private object[,] _data;
 
         public MatrixData()
         {
 
         }
-        public MatrixData(string filelocation, bool hasHeaders = true, char delimiter = ',')
+        public MatrixData(string filelocation, bool hasHeaders = true, char delimiter = ',', Type defaultNumericType = null)
         {
+            if(!(defaultNumericType==null))
+            {
+                DefaultNumericType = defaultNumericType;
+            }
             ReadFromCSV(filelocation, hasHeaders,delimiter);
         }
 
@@ -46,23 +58,23 @@ namespace helpers
 
         }
 
-        public void SplitData(out MatrixData<T> SplitTo, int row, int col)
+        public void SplitData(out MatrixData SplitTo, int row, int col)
         {
             throw new NotImplementedException();
         }
 
-        public void CopyData(out MatrixData<T> CopyTo, int row, int col)
+        public void CopyData(out MatrixData CopyTo, int row, int col)
         {
             throw new NotImplementedException();
         }
 
-        public void AddRow(T[] newRow)
+        public void AddRow(object[] newRow)
         {
             if (newRow.Length != NumberOfColumns)
             {
                 throw new Exception("Number of columns in the new row ("+newRow.Length+") must equal to the number of columns{"+NumberOfColumns+")");
             }
-            T[,] newData = new T[NumberOfRows+1,NumberOfColumns];
+            object[,] newData = new object[NumberOfRows+1,NumberOfColumns];
 
             for (int row = 0; row < NumberOfRows; row++)
             {
@@ -88,7 +100,7 @@ namespace helpers
         public void Suffle()
         {
             Random random = new Random();
-            T[][] data = ToJagged(_data);
+            object[][] data = ToJagged(_data);
             data = data.OrderBy(t => random.Next()).ToArray();
             _data = ToRectangular(data);
         }
