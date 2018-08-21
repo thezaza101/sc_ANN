@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace helpers
 {
-    public partial class MatrixData<T>
+    public partial class MatrixData
     {
 
         public string Head(int numberOfRows = 5, int colWidth = 10)
@@ -15,7 +15,16 @@ namespace helpers
                 output += ColValue(h) + '|';
             }
             output += Environment.NewLine;
+
+            foreach (Type t in _columnDataTypes)
+            {
+                output += ColValue(t.Name,'-') + '|';
+            }
+            output += Environment.NewLine;
+
             output += new String('-', NumberOfColumns*colWidth).ToString();
+
+            
             
             for (int r = 0; r<numberOfRows;r++)
             {
@@ -26,8 +35,9 @@ namespace helpers
                 }
             }
 
-            string ColValue(string value)
+            string ColValue(string value, char fill = ' ')
             {
+
                 int valLength = value.Length;
                 string valueToWrite = "";
                 if (valLength > colWidth-4)
@@ -39,7 +49,7 @@ namespace helpers
                     if(valLength%2==0)
                     {
                         int numspaces = ((colWidth-4) - valLength)/2;
-                        valueToWrite = (new String(' ', numspaces)) + value + (new String(' ', numspaces));
+                        valueToWrite = (new String(fill, numspaces)) + value + (new String(fill, numspaces));
                     }
                     else
                     {
@@ -75,35 +85,27 @@ namespace helpers
 
         //https://stackoverflow.com/questions/2961656/generic-tryparse
         //This method will try parse the string data to the Type specified when the class was created
-        private T Convert(string input)
+        private object ConvertToNumeric(string input)
         {
-            try
+            var converter = TypeDescriptor.GetConverter(DefaultNumericType);
+            if (converter != null)
             {
-                var converter = TypeDescriptor.GetConverter(typeof(T));
-                if (converter != null)
-                {
-                    // Cast ConvertFromString(string text) : object to (T)
-                    return (T)converter.ConvertFromString(input);
-                }
-                return default(T);
+                return converter.ConvertFromString(input);
             }
-            catch (NotSupportedException)
-            {
-                return default(T);
-            }
+            return null;
         }
 
         //https://stackoverflow.com/questions/232395/how-do-i-sort-a-two-dimensional-array-in-c
         //Convert rectangular array to jagged array
-        private T[][] ToJagged(T[,] array)
+        private object[][] ToJagged(object[,] array)
         {
             int height = array.GetLength(0);
             int width = array.GetLength(1);
-            T[][] jagged = new T[height][];
+            object[][] jagged = new object[height][];
 
             for (int i = 0; i < height; i++)
             {
-                T[] row = new T[width];
+                object[] row = new object[width];
                 for (int j = 0; j < width; j++)
                 {
                     row[j] = array[i, j];
@@ -113,14 +115,14 @@ namespace helpers
             return jagged;
         }
         //Convert jagged array to rectangular array
-        private T[,] ToRectangular(T[][] array)
+        private object[,] ToRectangular(object[][] array)
         {
             int height = array.Length;
             int width = array[0].Length;
-            T[,] rect = new T[height, width];
+            object[,] rect = new object[height, width];
             for (int i = 0; i < height; i++)
             {
-                T[] row = array[i];
+                object[] row = array[i];
                 for (int j = 0; j < width; j++)
                 {
                     rect[i, j] = row[j];
