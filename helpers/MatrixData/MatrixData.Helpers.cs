@@ -6,7 +6,6 @@ namespace helpers
 {
     public partial class MatrixData
     {
-
         public string Head(int numberOfRows = 5, int colWidth = 10)
         {
             string output ="";
@@ -23,8 +22,6 @@ namespace helpers
             output += Environment.NewLine;
 
             output += new String('-', NumberOfColumns*colWidth).ToString();
-
-            
             
             for (int r = 0; r<numberOfRows;r++)
             {
@@ -37,7 +34,6 @@ namespace helpers
 
             string ColValue(string value, char fill = ' ')
             {
-
                 int valLength = value.Length;
                 string valueToWrite = "";
                 if (valLength > colWidth-4)
@@ -114,6 +110,7 @@ namespace helpers
             }
             return jagged;
         }
+
         //Convert jagged array to rectangular array
         private object[,] ToRectangular(object[][] array)
         {

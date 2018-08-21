@@ -45,6 +45,42 @@ namespace helpers
                 
             }
         }
+
+        public void WriteCSV(string path, bool includeHeaders = true)
+        {
+            using (StreamWriter sw = new StreamWriter(path))
+            {
+                if(includeHeaders)
+                {
+                    sw.WriteLine(CreateHeaderRow());
+                }
+                object[][] data = ToJagged(_data);
+                for (int row = 0; row<NumberOfRows;row++)
+                {
+                    sw.WriteLine(CreateCSVRow(data[row]));
+                }                
+            }
+        }
+
+        private string CreateHeaderRow()
+        {
+            return CreateCSVRow(_headers);
+        }
+        
+        private string CreateCSVRow(object[] data)
+        {
+            string output = "";
+            for (int col = 0; col < NumberOfColumns; col++)
+            {
+                output += data[col];
+                if (col != (NumberOfColumns-1))
+                {
+                    output += ',';
+                }
+            }
+            return output;
+        }
+
         private void SetHeaders()
         {
             _columnDataTypes = new Type[NumberOfColumns];
@@ -63,13 +99,12 @@ namespace helpers
                     var o = ConvertToNumeric(_data[row,col].ToString());
                 }
             } 
-            catch (NotSupportedException)
+            catch (Exception)
             {
                 isValueNumaric = false;
             }
             return (isValueNumaric)? typeof(double) : typeof(string);            
         }
-
 
         //This set the header values if the file has headers
         private void SetHeaders(string headersLine, bool hasHeaders, char delimiter)

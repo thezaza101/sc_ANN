@@ -7,7 +7,7 @@ namespace cli
     {
         static void Main(string[] args)
         {
-            MatrixData data = new MatrixData("iris - Copy.Txt", false,' ');
+            /*MatrixData data = new MatrixData("iris - Copy.Txt", false,' ');
             data.ChangeHeader(0,"Speal.Length");
             data.ChangeHeader(1,"Speal.Width");
             data.ChangeHeader(2,"Petal.Length");
@@ -57,8 +57,23 @@ namespace cli
             data.Sort(0,false);
             Console.WriteLine(data.Head(5,20));
 
+            data.WriteCSV("test.csv");*/
+
+            MatrixData data = new MatrixData("test.csv", false);
+            //System.Console.WriteLine(data.Head(10));
+
+            //System.Console.WriteLine("CopyData(0,0) test");
+            //MatrixData data2 = data.CopyData(0,0);
+            //System.Console.WriteLine(data.Head(10));
             
+            System.Console.WriteLine("Spitting the data in half..");
+            MatrixData secondHalf = data.SplitData(5,0);
+            System.Console.WriteLine(data.Head());
+            System.Console.WriteLine(secondHalf.Head());
+
+
             Console.ReadLine();
+
         }
     }
 }

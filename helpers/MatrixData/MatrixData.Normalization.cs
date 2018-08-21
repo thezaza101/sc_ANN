@@ -39,6 +39,7 @@ namespace helpers
                 throw new InvalidOperationException("Cannot preform normalization on non-numaric column");
             }
         }
+        
         private void PreformStandardScoreNormalization(int col)
         {
             //https://en.wikipedia.org/wiki/Standard_score
@@ -88,6 +89,7 @@ namespace helpers
             //https://en.wikipedia.org/wiki/Feature_scaling
             PreformStandardScoreNormalization(col);
         }
+
         //Finds the minimum value for the given column
         public double Min(int col)
         {
@@ -107,6 +109,7 @@ namespace helpers
                 throw new InvalidOperationException("Cannot find minimum of non numaric value");
             }
         }
+
         //Finds the maximum value for the given column
         public double Max(int col)
         {
@@ -127,6 +130,7 @@ namespace helpers
             }
 
         }
+
         //Find the Mean (average) value for the given column
         public double Mean(int col)
         {
@@ -139,6 +143,7 @@ namespace helpers
                 throw new InvalidOperationException("Cannot find minimum of non numaric value");
             }
         }
+
         //Find the sum of a column
         public double Sum (int col)
         {
@@ -156,6 +161,7 @@ namespace helpers
                 throw new InvalidOperationException("Cannot find minimum of non numaric value");
             }
         }
+
         //Determines if the input value is numaric
         private bool IsValueNumaric(int col)
         {
