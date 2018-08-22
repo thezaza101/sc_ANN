@@ -22,13 +22,13 @@ namespace helpers
             return new MatrixData(this, row, col, numRows, numCols);
         }
 
-        public void AddRow(object[] newRow)
+        public void AddRow(dynamic[] newRow)
         {
             if (newRow.Length != NumberOfColumns)
             {
                 throw new Exception("Number of columns in the new row ("+newRow.Length+") must equal to the number of columns{"+NumberOfColumns+")");
             }
-            object[,] newData = new object[NumberOfRows+1,NumberOfColumns];
+            dynamic[,] newData = new dynamic[NumberOfRows+1,NumberOfColumns];
 
             for (int row = 0; row < NumberOfRows; row++)
             {
@@ -44,13 +44,13 @@ namespace helpers
             _data = newData;
             NumberOfRows++;   
         }
-        public void ChangeRow(int row, object[] newRow)
+        public void ChangeRow(int row, dynamic[] newRow)
         {
             if (newRow.Length != NumberOfColumns)
             {
                 throw new Exception("Number of columns in the new row ("+newRow.Length+") must equal to the number of columns{"+NumberOfColumns+")");
             }
-            object[][] data = _data.ToJagged();
+            dynamic[][] data = _data.ToJagged();
             data[row] = newRow;
             _data = data.ToRectangular();
         }
@@ -63,13 +63,13 @@ namespace helpers
         public void Suffle()
         {
             Random random = new Random();
-            object[][] data = _data.ToJagged();
+            dynamic[][] data = _data.ToJagged();
             data = data.OrderBy(t => random.Next()).ToArray();
             _data = data.ToRectangular();
         }
         public void Transpose()
         {
-            object[,] output = new object[NumberOfRows, NumberOfColumns];
+            dynamic[,] output = new dynamic[NumberOfRows, NumberOfColumns];
 
             for (int i = 0; i < NumberOfColumns; i++)
             {
@@ -91,7 +91,7 @@ namespace helpers
                 int cc = 0;
                 for (int c = 0; c < NumberOfColumns; c++)
                 {
-                    double d = _data[r,c].ToDouble();
+                    double d = _data[r,c];
                     if (c == col)
                     {
                         for (int j=0; j<numClasses; j++)
@@ -110,7 +110,7 @@ namespace helpers
                         cc++;
                     }
                 }
-                exemplarData.ChangeRow(r, Array.ConvertAll<double,object>(rr, x=> (object)x));
+                exemplarData.ChangeRow(r, Array.ConvertAll<double,dynamic>(rr, x=> (dynamic)x));
                 //exemplarData.ReSetColTypes();
             }
             exemplarData.CopyMetaData(this);
@@ -135,7 +135,7 @@ namespace helpers
 
         public void TopSplit(int rowStart, int numRowsToKeep)
         {
-            object[,] newData = new object[numRowsToKeep,NumberOfColumns];
+            dynamic[,] newData = new dynamic[numRowsToKeep,NumberOfColumns];
 
             for (int row = rowStart; row < rowStart+numRowsToKeep; row++) 
             {
@@ -150,7 +150,7 @@ namespace helpers
 
         public void LeftSplit(int colStart, int numColsToKeep)
         {
-            object[,] newData = new object[NumberOfRows,numColsToKeep];
+            dynamic[,] newData = new dynamic[NumberOfRows,numColsToKeep];
             string[] newHeaders = new string[numColsToKeep];
 
             Type[] newColumnDataTypes = new Type[numColsToKeep];

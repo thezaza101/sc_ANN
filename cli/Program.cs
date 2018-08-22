@@ -7,7 +7,7 @@ namespace cli
     {
         static void Main(string[] args)
         {
-            /*MatrixData data = new MatrixData("iris - Copy.Txt", false,' ');
+            MatrixData data = new MatrixData("iris - Copy.Txt", false,' ');
             data.ChangeHeader(0,"Speal.Length");
             data.ChangeHeader(1,"Speal.Width");
             data.ChangeHeader(2,"Petal.Length");
@@ -57,7 +57,7 @@ namespace cli
             data.Sort(0,false);
             Console.WriteLine(data.Head(5,20));
 
-            data.WriteCSV("test.csv");
+            /*data.WriteCSV("test.csv");
 
             MatrixData data = new MatrixData("test.csv", false);
             //System.Console.WriteLine(data.Head(10));
@@ -74,7 +74,7 @@ namespace cli
             System.Console.WriteLine(data.Head());
             System.Console.WriteLine(secondColHalf.Head());*/
 
-            MatrixData data = new MatrixData("task2z11.txt", false,' ');
+            /*MatrixData data = new MatrixData("task2z11.txt", false,' ');
 
             Console.WriteLine(data.Head(10,20));
 
@@ -84,7 +84,7 @@ namespace cli
 
             MatrixData exemplarData = data.GetExemplar(2,2,1);
             Console.WriteLine(exemplarData.ToString());
-            var test = data.IndexOf(0,data[1,0]);
+            var test = data.IndexOf(0,data[1,0]);*/
 
 
 

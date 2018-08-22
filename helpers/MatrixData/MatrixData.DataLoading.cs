@@ -20,7 +20,7 @@ namespace helpers
             NumberOfRows = lines.Length-rowStartIndex;
             NumberOfColumns = _headers.Length;
 
-            _data = new object[NumberOfRows,NumberOfColumns];
+            _data = new dynamic[NumberOfRows,NumberOfColumns];
             
             for (int row = rowStartIndex; row<lines.Length; row++)
             {
@@ -54,7 +54,7 @@ namespace helpers
                 {
                     sw.WriteLine(CreateHeaderRow());
                 }
-                object[][] data = _data.ToJagged();
+                dynamic[][] data = _data.ToJagged();
                 for (int row = 0; row<NumberOfRows;row++)
                 {
                     sw.WriteLine(CreateCSVRow(data[row]));
@@ -67,7 +67,7 @@ namespace helpers
             return CreateCSVRow(_headers);
         }
         
-        private string CreateCSVRow(object[] data)
+        private string CreateCSVRow(dynamic[] data)
         {
             string output = "";
             for (int col = 0; col < NumberOfColumns; col++)

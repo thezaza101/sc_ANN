@@ -64,10 +64,7 @@ namespace helpers
             return output;
         }
 
-        public void Transpose()
-        {
-            
-        }
+        
 
     }
 }

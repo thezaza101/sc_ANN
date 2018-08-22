@@ -11,14 +11,14 @@ namespace helpers
                 return _data.Length;
             }
         }
-        public object[] this[int row]
+        public dynamic[] this[int row]
         {
             get
             {
                 return _data.ToJagged()[row];
             }
         }
-        public object this[int row, int col]
+        public dynamic this[int row, int col]
         {
             get
             {
@@ -28,7 +28,7 @@ namespace helpers
                 _data[row,col] = value;
             }
         }
-        public object[] Rows(int row)
+        public dynamic[] Rows(int row)
         {
             return this[row];
         }
@@ -37,7 +37,7 @@ namespace helpers
         {
             return Columns(Array.FindIndex(_headers,c => c.Equals(colName)));
         }
-        public object[] Columns(int col)
+        public dynamic[] Columns(int col)
         {
             object[] output = new object[NumberOfRows];
             for (int row = 0; row<NumberOfRows;row++)
@@ -64,7 +64,7 @@ namespace helpers
             return this.CopyData(0,col,0,1);
         }
 
-        public int IndexOf(int col, object o)
+        public int IndexOf(int col, dynamic o)
         {
             return Array.IndexOf(Columns(col),o);
         }

@@ -4,44 +4,44 @@ namespace helpers
 {
     public static class MatrixDataExtension
     {
-        public static object Add(this object o, object valueToAdd)
+        public static dynamic Add(this object o, dynamic valueToAdd)
         {
             if (o.IsValueNumaric())
             {
-                return (double)o + (double)valueToAdd;
+                return (double)o + valueToAdd;
             }
             else
             {
                 return o.ToString()+valueToAdd.ToString();
             }
         }
-        public static object Subtract(this object o, object valueToSubrtact)
+        public static object Subtract(this object o, dynamic valueToSubrtact)
         {
             if (o.IsValueNumaric())
             {
-                return (double)o - (double)valueToSubrtact;
+                return (double)o - valueToSubrtact;
             }
             else
             {
                 throw new InvalidOperationException("Cannot add non numaric types");
             }
         }
-        public static object DevideBy(this object o, object valueToDevideBy)
+        public static object DevideBy(this object o, dynamic valueToDevideBy)
         {
             if (o.IsValueNumaric())
             {
-                return (double)o / (double)valueToDevideBy;
+                return (double)o / valueToDevideBy;
             }
             else
             {
                 throw new InvalidOperationException("Cannot devide by non numaric types");
             }
         }
-        public static object MultiplyBy(this object o, object valueToDevideBy)
+        public static object MultiplyBy(this object o, dynamic valueToDevideBy)
         {
             if (o.IsValueNumaric())
             {
-                return (double)o * (double)valueToDevideBy;
+                return (double)o * valueToDevideBy;
             }
             else
             {
@@ -91,15 +91,15 @@ namespace helpers
         }
 
         //Convert rectangular array to jagged array
-        public static object[][] ToJagged(this object[,] array)
+        public static dynamic[][] ToJagged(this dynamic[,] array)
         {
             int height = array.GetLength(0);
             int width = array.GetLength(1);
-            object[][] jagged = new object[height][];
+            dynamic[][] jagged = new dynamic[height][];
 
             for (int i = 0; i < height; i++)
             {
-                object[] row = new object[width];
+                dynamic[] row = new dynamic[width];
                 for (int j = 0; j < width; j++)
                 {
                     row[j] = array[i, j];
@@ -110,14 +110,14 @@ namespace helpers
         }
 
         //Convert jagged array to rectangular array
-        public static object[,] ToRectangular(this object[][] array)
+        public static dynamic[,] ToRectangular(this dynamic[][] array)
         {
             int height = array.Length;
             int width = array[0].Length;
-            object[,] rect = new object[height, width];
+            dynamic[,] rect = new dynamic[height, width];
             for (int i = 0; i < height; i++)
             {
-                object[] row = array[i];
+                dynamic[] row = array[i];
                 for (int j = 0; j < width; j++)
                 {
                     rect[i, j] = row[j];

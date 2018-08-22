@@ -50,7 +50,7 @@ namespace helpers
             
             for (int row = 0; row < NumberOfRows; row++)
             {
-                double currentVal = (double)_data[row,col];
+                double currentVal = _data[row,col];
                 currentVal = (currentVal - min) * mult;
                 _data[row,col] = ConvertToNumeric(currentVal.ToString());
             }
@@ -63,7 +63,7 @@ namespace helpers
             double max = Max(col);
             for (int row = 0; row < NumberOfRows; row++)
             {
-                double currentVal = (double)_data[row,col];
+                double currentVal = _data[row,col];
                 currentVal = (currentVal - min) / (max - min);
                 _data[row,col] = ConvertToNumeric(currentVal.ToString());
             }
@@ -78,7 +78,7 @@ namespace helpers
 
             for (int row = 0; row < NumberOfRows; row++)
             {
-                double currentVal = (double)_data[row,col];
+                double currentVal = _data[row,col];
                 currentVal = (currentVal - mean) / (max - min);
                 _data[row,col] = ConvertToNumeric(currentVal.ToString());
             }
@@ -95,11 +95,11 @@ namespace helpers
         {
             if(IsValueNumaric(col))
             {
-                double min = (double)_data[0,col];            
+                double min = _data[0,col];            
                 //find the minimum value in the column
                 for (int row = 1; row < NumberOfRows; row++)
                 {
-                    double currentVal = (double)_data[row,col];
+                    double currentVal = _data[row,col];
                     min = (currentVal < min)? currentVal : min;
                 }
                 return min;
@@ -115,11 +115,11 @@ namespace helpers
         {
             if(IsValueNumaric(col))
             {
-                double max = (double)_data[0,col];           
+                double max = _data[0,col];           
                 //find the maximum value in the column
                 for (int row = 1; row < NumberOfRows; row++)
                 {
-                    double currentVal = (double)_data[row,col];
+                    double currentVal = _data[row,col];
                     max = (currentVal > max)? currentVal : max;
                 }
                 return max;
@@ -152,7 +152,7 @@ namespace helpers
                 double sum = 0;
                 for (int row = 0; row < NumberOfRows; row++)
                 {
-                    sum+= (double)_data[row,col];
+                    sum+= _data[row,col];
                 }
                 return sum;
             }

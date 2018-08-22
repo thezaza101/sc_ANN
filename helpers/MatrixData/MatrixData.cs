@@ -12,7 +12,7 @@ namespace helpers
         //This represents the headers of the maxtrix information
         public string[] Headers { get => _headers; }
         public Type[] ColumnDataTypes {get => _columnDataTypes; }
-        public object[,] Data {get => _data; }
+        public dynamic[,] Data {get => _data; }
 
         public int NumberOfRows{get;private set;}
         public int NumberOfColumns{get;private set;}
@@ -20,7 +20,7 @@ namespace helpers
 
         private string[] _headers;
         private Type[] _columnDataTypes;
-        private object[,] _data;
+        private dynamic[,] _data;
 
         public MatrixData()
         {
@@ -31,7 +31,7 @@ namespace helpers
             SetDefaultNumericType(defaultNumericType);
             _headers = MatrixDataExtension.GenerateEmptyArray<string>(numCols,"");
             _columnDataTypes = MatrixDataExtension.GenerateEmptyArray<Type>(numCols,typeof(object));
-            _data = new object[numRows,numCols];
+            _data = new dynamic[numRows,numCols];
             NumberOfRows = numRows;
             NumberOfColumns = numCols;
         }
@@ -44,7 +44,7 @@ namespace helpers
         public MatrixData(MatrixData dt, int rowStart, int colStart, int numRows = 0, int numCols = 0, Type defaultNumericType = null)
         {
             SetDefaultNumericType(defaultNumericType);
-            _data = dt._data.Clone() as object[,];
+            _data = dt._data.Clone() as dynamic[,];
             _columnDataTypes = dt._columnDataTypes.Clone() as Type[];
             _headers = dt._headers.Clone() as string[];
 
@@ -66,14 +66,14 @@ namespace helpers
             int numCols = dt.Columns.Count;
             _headers = MatrixDataExtension.GenerateEmptyArray<string>(numCols,"");
             _columnDataTypes = MatrixDataExtension.GenerateEmptyArray<Type>(numCols,typeof(object));
-            _data = new object[numRows,numCols];
+            _data = new dynamic[numRows,numCols];
             NumberOfRows = numRows;
             NumberOfColumns = numCols;
-            object[][] data = new object[numRows][];
-            object[] row;
+            dynamic[][] data = new dynamic[numRows][];
+            dynamic[] row;
             for(int r = 0; r<numRows; r++)
             {
-                row = new object[numCols];
+                row = new dynamic[numCols];
                 for (int c = 0; c<numCols; c++)
                 {
                     row[c] = dt.Rows[r][c];

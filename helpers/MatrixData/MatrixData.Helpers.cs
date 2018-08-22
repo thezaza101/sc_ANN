@@ -111,7 +111,7 @@ namespace helpers
         
         //https://stackoverflow.com/questions/2961656/generic-tryparse
         //This method will try parse the string data to the Type specified when the class was created
-        private object ConvertToNumeric(string input)
+        private dynamic ConvertToNumeric(string input)
         {
             var converter = TypeDescriptor.GetConverter(DefaultNumericType);
             if (converter != null)
