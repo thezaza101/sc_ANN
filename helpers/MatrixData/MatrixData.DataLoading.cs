@@ -31,7 +31,7 @@ namespace helpers
                 }
             }
 
-            SetHeaders();
+            DetermineColTypes();
 
             for(int col = 0; col < NumberOfColumns; col++)
             {
@@ -54,7 +54,7 @@ namespace helpers
                 {
                     sw.WriteLine(CreateHeaderRow());
                 }
-                object[][] data = ToJagged(_data);
+                object[][] data = _data.ToJagged();
                 for (int row = 0; row<NumberOfRows;row++)
                 {
                     sw.WriteLine(CreateCSVRow(data[row]));
@@ -81,13 +81,17 @@ namespace helpers
             return output;
         }
 
-        private void SetHeaders()
+        public void DetermineColTypes()
         {
             _columnDataTypes = new Type[NumberOfColumns];
             for (int col = 0; col < NumberOfColumns; col++)
             {
                 _columnDataTypes[col] = DetermineColType(col);
             }
+        }
+        public void DetermineColTypes(int col)
+        {
+            _columnDataTypes[col] = DetermineColType(col);
         }
         private Type DetermineColType(int col)
         {
@@ -115,7 +119,13 @@ namespace helpers
             }
             else
             {
-                _headers = Enumerable.Repeat(string.Empty, SplitCsvLine(headersLine,delimiter).Length).ToArray();
+                int numCols = SplitCsvLine(headersLine,delimiter).Length;
+                _headers = new string[numCols];
+                for (int i = 0; i<numCols;i++)
+                {
+                    _headers[i] = i.ToString();
+                }
+                //_headers = Enumerable.Repeat(string.Empty, SplitCsvLine(headersLine,delimiter).Length).ToArray();
             }         
         }
 

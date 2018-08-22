@@ -57,6 +57,24 @@ namespace helpers
             }
             return output;
         }
+
+        public void CopyMetaData(MatrixData data)
+        {
+            var copiedHeaders = data._headers.Clone() as string[];
+            var copiedTypes =  data._columnDataTypes.Clone() as Type[];
+            try
+            {
+                for(int i = 0; i<NumberOfColumns;i++)
+                {
+                    this._headers[i] = copiedHeaders[i];
+                    this._columnDataTypes[i] = copiedTypes[i];
+                }
+            }
+            catch
+            {
+
+            }
+        }
         
         //https://stackoverflow.com/questions/33417721/convert-a-object-array-into-a-dataset-datatable-in-c-sharp
         public System.Data.DataTable ToDataTable()
@@ -79,6 +97,18 @@ namespace helpers
             return dt;
         }
 
+        public override string ToString()
+        {
+            return Head(NumberOfRows);
+        }
+
+        private List<Type> numaricTypes = new List<Type>{typeof(double),typeof(int),typeof(decimal)};
+        //Determines if the input value is numaric
+        private bool IsValueNumaric(int col)
+        {
+            return numaricTypes.Contains(_columnDataTypes[col]);
+        }
+        
         //https://stackoverflow.com/questions/2961656/generic-tryparse
         //This method will try parse the string data to the Type specified when the class was created
         private object ConvertToNumeric(string input)
@@ -89,43 +119,6 @@ namespace helpers
                 return converter.ConvertFromString(input);
             }
             return null;
-        }
-
-        //https://stackoverflow.com/questions/232395/how-do-i-sort-a-two-dimensional-array-in-c
-        //Convert rectangular array to jagged array
-        private object[][] ToJagged(object[,] array)
-        {
-            int height = array.GetLength(0);
-            int width = array.GetLength(1);
-            object[][] jagged = new object[height][];
-
-            for (int i = 0; i < height; i++)
-            {
-                object[] row = new object[width];
-                for (int j = 0; j < width; j++)
-                {
-                    row[j] = array[i, j];
-                }
-                jagged[i] = row;
-            }
-            return jagged;
-        }
-
-        //Convert jagged array to rectangular array
-        private object[,] ToRectangular(object[][] array)
-        {
-            int height = array.Length;
-            int width = array[0].Length;
-            object[,] rect = new object[height, width];
-            for (int i = 0; i < height; i++)
-            {
-                object[] row = array[i];
-                for (int j = 0; j < width; j++)
-                {
-                    rect[i, j] = row[j];
-                }
-            }
-            return rect;
         }
     }
 }

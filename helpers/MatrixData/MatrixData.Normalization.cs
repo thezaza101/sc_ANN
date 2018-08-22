@@ -162,14 +162,6 @@ namespace helpers
             }
         }
 
-        //Determines if the input value is numaric
-        private bool IsValueNumaric(int col)
-        {
-            List<Type> numaricTypes = new List<Type>();
-            numaricTypes.Add(typeof(double));
-            numaricTypes.Add(typeof(int));
-            numaricTypes.Add(typeof(decimal));
-            return numaricTypes.Contains(_columnDataTypes[col]);
-        }
+        
     }
 }

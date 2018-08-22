@@ -57,7 +57,7 @@ namespace cli
             data.Sort(0,false);
             Console.WriteLine(data.Head(5,20));
 
-            data.WriteCSV("test.csv");*/
+            data.WriteCSV("test.csv");
 
             MatrixData data = new MatrixData("test.csv", false);
             //System.Console.WriteLine(data.Head(10));
@@ -70,6 +70,22 @@ namespace cli
             MatrixData secondHalf = data.SplitData(5,0);
             System.Console.WriteLine(data.Head());
             System.Console.WriteLine(secondHalf.Head());
+            MatrixData secondColHalf = data.SplitData(0,5);
+            System.Console.WriteLine(data.Head());
+            System.Console.WriteLine(secondColHalf.Head());*/
+
+            MatrixData data = new MatrixData("task2z11.txt", false,' ');
+
+            Console.WriteLine(data.Head(10,20));
+
+            System.Console.WriteLine();
+            System.Console.WriteLine();
+            System.Console.WriteLine();
+
+            MatrixData exemplarData = data.GetExemplar(2,2,1);
+            Console.WriteLine(exemplarData.ToString());
+            var test = data.IndexOf(0,data[1,0]);
+
 
 
             Console.ReadLine();
