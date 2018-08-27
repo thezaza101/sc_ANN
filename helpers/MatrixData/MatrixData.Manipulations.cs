@@ -17,7 +17,7 @@ namespace helpers
             return splitData;
         }
 
-        public MatrixData CopyData(int row, int col, int numRows = 0, int numCols = 0)
+        public MatrixData CopyData(int row = 0, int col = 0, int numRows = 0, int numCols = 0)
         {
             return new MatrixData(this, row, col, numRows, numCols);
         }
@@ -58,6 +58,22 @@ namespace helpers
         {
             _headers[col] = value;
         }
+        public void ChangeRowHeader(string[] rowNames)
+        {
+            for (int i = 0; i < rowNames.Length; i++)
+            {
+                ChangeRowHeader(i, rowNames[i]);
+            }
+        }
+        public void ChangeRowHeader(int row, string value)
+        {
+            if (_rowNames==null)
+            {
+                _rowNames = new string[NumberOfRows];
+            }
+            _rowNames[row] = value;
+        }
+
 
         //https://stackoverflow.com/questions/30164019/shuffling-2d-array-of-cards
         public void Suffle()
@@ -81,6 +97,7 @@ namespace helpers
             _data = output;
         }
 
+        //Get the example pair for the matrix
         public MatrixData GetExemplar(int col, int numClasses, int startAt = 0, string colName = "")
         {
             int cols = NumberOfColumns + numClasses - 1;            

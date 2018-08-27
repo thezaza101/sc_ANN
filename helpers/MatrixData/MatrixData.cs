@@ -11,6 +11,7 @@ namespace helpers
     {
         //This represents the headers of the maxtrix information
         public string[] Headers { get => _headers; }
+        public string[] RowNames { get => _rowNames; }
         public Type[] ColumnDataTypes {get => _columnDataTypes; }
         public dynamic[,] Data {get => _data; }
 
@@ -19,6 +20,7 @@ namespace helpers
         public Type DefaultNumericType {get; private set;} = typeof(double);
 
         private string[] _headers;
+        private string[] _rowNames;
         private Type[] _columnDataTypes;
         private dynamic[,] _data;
 
@@ -26,6 +28,18 @@ namespace helpers
         {
 
         }
+
+        
+        public MatrixData(dynamic [,] data, Type defaultNumericType = null)
+        {
+            SetDefaultNumericType(defaultNumericType);
+            _data = data;
+            NumberOfRows = _data.GetLength(0);
+            NumberOfColumns = data.GetLength(1);
+            DetermineColTypes();      
+            SetHeaders(new String(',', NumberOfColumns).ToString(),false,',');      
+        }
+        public MatrixData(dynamic [][] data, Type defaultNumericType = null) : this(data.ToRectangular(),defaultNumericType){}
         public MatrixData(int numRows, int numCols, Type defaultNumericType = null)
         {
             SetDefaultNumericType(defaultNumericType);

@@ -37,6 +37,15 @@ namespace helpers
             return output;
         }
 
+        public static MatrixData operator *(MatrixData a, MatrixData b)
+        {
+            throw new NotImplementedException();
+        }
+        public static MatrixData operator /(MatrixData a, MatrixData b)
+        {
+            throw new NotImplementedException();
+        }
+
         
 
         public static MatrixData operator +(MatrixData a, double b)
@@ -63,8 +72,29 @@ namespace helpers
             }
             return output;
         }
-
-        
-
+        public static MatrixData operator *(MatrixData a, double b)
+        {
+            MatrixData output = a.CopyData(0,0);
+            for(int r = 0;r<a.NumberOfRows;r++)
+            {
+                for(int c = 0;c<a.NumberOfColumns; c++)
+                {
+                    output[r,c] = output[r,c].MultiplyBy(b);
+                }
+            }
+            return output;
+        }
+        public static MatrixData operator /(MatrixData a, double b)
+        {
+            MatrixData output = a.CopyData(0,0);
+            for(int r = 0;r<a.NumberOfRows;r++)
+            {
+                for(int c = 0;c<a.NumberOfColumns; c++)
+                {
+                    output[r,c] = output[r,c].DevideBy(b);
+                }
+            }
+            return output;
+        }
     }
 }
