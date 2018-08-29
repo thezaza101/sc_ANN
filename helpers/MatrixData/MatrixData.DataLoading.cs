@@ -13,11 +13,21 @@ namespace helpers
         public void ReadFromCSV(string filelocation, bool hasHeaders, char delimiter)
         {
             string[] lines = ReadAllLines(filelocation);
+            ProcessLines(lines,hasHeaders,delimiter);
+           
+        }
 
-            int rowStartIndex = (hasHeaders)? 1 : 0;
-            SetHeaders(lines[0], hasHeaders,delimiter);
+        public void ReadFromString(string input, bool hasHeaders, char delimiter)
+        {
+            ProcessLines(input.Lines(), hasHeaders, delimiter);
+        }
+
+        private void ProcessLines(string[] lines,bool hasHeaders, char delimiter)
+        {
+             int rowStartIndex = (hasHeaders)? 1 : 0;
 
             NumberOfRows = lines.Length-rowStartIndex;
+            SetHeaders(lines[0], hasHeaders,delimiter);
             NumberOfColumns = _headers.Length;
 
             _data = new dynamic[NumberOfRows,NumberOfColumns];
@@ -30,7 +40,6 @@ namespace helpers
                     _data[row-rowStartIndex,col] = data[col];
                 }
             }
-
             DetermineColTypes();
 
             for(int col = 0; col < NumberOfColumns; col++)
@@ -123,10 +132,23 @@ namespace helpers
                 _headers = new string[numCols];
                 for (int i = 0; i<numCols;i++)
                 {
-                    _headers[i] = i.ToString();
+                    _headers[i] = (i+1).ToString();
                 }
                 //_headers = Enumerable.Repeat(string.Empty, SplitCsvLine(headersLine,delimiter).Length).ToArray();
             }         
+            SetRowNames();
+        }
+
+        private void SetRowNames()
+        {
+            if (_rowNames==null)
+            {
+                _rowNames = new string[NumberOfRows];
+                for (int i = 0; i<NumberOfRows;i++)
+                {
+                    _rowNames[i] = (i+1).ToString();
+                }
+            }
         }
 
         //https://stackoverflow.com/questions/12744725/how-do-i-perform-file-readalllines-on-a-file-that-is-also-open-in-excel

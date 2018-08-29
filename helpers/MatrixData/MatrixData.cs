@@ -24,11 +24,7 @@ namespace helpers
         private Type[] _columnDataTypes;
         private dynamic[,] _data;
 
-        public MatrixData()
-        {
-
-        }
-
+        public MatrixData() {}
         
         public MatrixData(dynamic [,] data, Type defaultNumericType = null)
         {
@@ -37,40 +33,52 @@ namespace helpers
             NumberOfRows = _data.GetLength(0);
             NumberOfColumns = data.GetLength(1);
             DetermineColTypes();      
-            SetHeaders(new String(',', NumberOfColumns).ToString(),false,',');      
+            SetHeaders(new String(',', NumberOfColumns-1).ToString(),false,',');   
+            SetRowNames();   
         }
         public MatrixData(dynamic [][] data, Type defaultNumericType = null) : this(data.ToRectangular(),defaultNumericType){}
+        public MatrixData(dynamic [] data, Type defaultNumericType = null) : this (Make2DArray(data),defaultNumericType){}
         public MatrixData(int numRows, int numCols, Type defaultNumericType = null)
         {
-            SetDefaultNumericType(defaultNumericType);
-            _headers = MatrixDataExtension.GenerateEmptyArray<string>(numCols,"");
-            _columnDataTypes = MatrixDataExtension.GenerateEmptyArray<Type>(numCols,typeof(object));
-            _data = new dynamic[numRows,numCols];
             NumberOfRows = numRows;
-            NumberOfColumns = numCols;
+            NumberOfColumns = numCols;              
+            _columnDataTypes = MatrixDataExtension.GenerateEmptyArray<Type>(numCols,typeof(object));
+            _data = Make2DArray(MatrixDataExtension.GenerateEmptyArray<dynamic>(numRows,default(double)),numCols);
+            SetDefaultNumericType(defaultNumericType);
+            SetHeaders(new String(',', numCols-1).ToString(),false,',');    
+            SetRowNames();
         }
-        public MatrixData(string filelocation, bool hasHeaders = true, char delimiter = ',', Type defaultNumericType = null)
+        public MatrixData(string input, bool hasHeaders = true, bool inputIsFile = true, char delimiter = ',', Type defaultNumericType = null)
         {
             SetDefaultNumericType(defaultNumericType);
-            ReadFromCSV(filelocation, hasHeaders,delimiter);
+            if(inputIsFile)
+            {
+                ReadFromCSV(input, hasHeaders,delimiter);
+            }
+            else
+            {
+                ReadFromString(input, hasHeaders,delimiter);
+            }
+
+            
         }
 
         public MatrixData(MatrixData dt, int rowStart, int colStart, int numRows = 0, int numCols = 0, Type defaultNumericType = null)
         {
             SetDefaultNumericType(defaultNumericType);
             _data = dt._data.Clone() as dynamic[,];
-            _columnDataTypes = dt._columnDataTypes.Clone() as Type[];
+            _columnDataTypes = dt._columnDataTypes.Clone() as Type[];            
             _headers = dt._headers.Clone() as string[];
-
+            _rowNames = dt._rowNames.Clone()  as string[];
             this.NumberOfColumns = dt.NumberOfColumns;
             this.NumberOfRows = dt.NumberOfRows;
             this.DefaultNumericType = dt.DefaultNumericType;
-
             int rowsToKeep = (numRows == 0)? (NumberOfRows - rowStart) : numRows;
             int colsToKeep = (numCols == 0)? (NumberOfColumns - colStart) : numCols;
 
             TopSplit(rowStart, rowsToKeep);
             LeftSplit(colStart, colsToKeep);
+            
         }
 
         public MatrixData(System.Data.DataTable dt, Type defaultNumericType = null)
@@ -100,6 +108,7 @@ namespace helpers
                 _headers[c] = dt.Columns[c].ColumnName;
             }            
             DetermineColTypes();
+            SetRowNames();
         }           
 
         private void SetDefaultNumericType(Type defaultNumericType)

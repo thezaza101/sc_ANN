@@ -2,7 +2,7 @@ using System;
 
 namespace nn
 {
-    public class Sc_ANN : I_NeuralNetwork
+    public class Sc_ANN
     {
 
 

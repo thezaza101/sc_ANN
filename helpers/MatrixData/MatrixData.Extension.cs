@@ -49,34 +49,13 @@ namespace helpers
             }
         }
 
+        
+
         public static bool IsValueNumaric(this object o)
         {
             double d;
             return double.TryParse(o.ToString(), out d);
         }
-
-
-        public static MatrixData AddMatrix(this MatrixData data1, MatrixData data2)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static MatrixData SubtractMatrix(this MatrixData data1, MatrixData data2)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static MatrixData DevideMatrix(this MatrixData data1, MatrixData data2)
-        {
-            throw new NotImplementedException();
-        }
-        public static MatrixData MultiplyMatrix(this MatrixData data1, MatrixData data2)
-        {
-            throw new NotImplementedException();
-        }
-
-
-
         public static double ToDouble(this object o)
         {
             double d;
@@ -89,7 +68,6 @@ namespace helpers
             int.TryParse(o.ToString(), out i);
             return i;
         }
-
         //Convert rectangular array to jagged array
         public static dynamic[][] ToJagged(this dynamic[,] array)
         {
@@ -134,5 +112,49 @@ namespace helpers
             }
             return output;
         }
+        public static dynamic[] ToDynamicArray(this double[] input)
+        {
+            return Array.ConvertAll<double, dynamic>(input, x=> (dynamic)x);
+        }
+        public static dynamic[][] ToDynamicArray(this double[][] input)
+        {
+            dynamic[][] output = new dynamic[input.Length][];
+            for (int row = 0; row < input.Length;row++)
+            {
+                output[row] = Array.ConvertAll<double, dynamic>(input[row], x=> (dynamic)x);
+            }
+            return output;
+        }
+        public static dynamic[,] ToDynamicArray(this double[,] input)
+        {
+            dynamic[,] output = new dynamic[input.GetLength(0),input.GetLength(1)];
+            for (int row = 0; row < input.GetLength(0);row++)
+            {
+                for (int col = 0; col< input.GetLength(1);col++)
+                {
+                    output[row,col] = input[row,col];
+                }                
+            }
+            return output;
+        }
+        public static double[][] ToDoubleArray(this dynamic[][] input)
+        {
+            double[][] output = new double[input.Length][];
+            for (int row = 0; row < input.Length;row++)
+            {
+                output[row] = Array.ConvertAll<dynamic, double>(input[row], x=> (double)x);
+            }
+            return output;
+        }
+
+        public static MatrixData GetTranspose(this MatrixData input)
+        {
+            MatrixData output = input.CopyData();
+            output.Transpose();
+            return output;
+        }
+        public static string[] Lines(this string input) => input.Split(new [] { '\r', '\n' });
+        
+        
     }
 }

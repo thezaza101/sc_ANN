@@ -39,6 +39,16 @@ namespace helpers
                 throw new InvalidOperationException("Cannot preform normalization on non-numaric column");
             }
         }
+        public void NormalizeAll(NormalizationMethod method = NormalizationMethod.StandardScore)
+        {
+            for (int col = 0; col<NumberOfColumns;col++)
+            {
+                if(IsValueNumaric(col))
+                {
+                    Normalize(col,method);
+                }
+            }
+        }
         
         private void PreformStandardScoreNormalization(int col)
         {

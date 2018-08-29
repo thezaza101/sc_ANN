@@ -8,5 +8,29 @@
   <Application.Styles>
     <StyleInclude Source="resm:Avalonia.Themes.Default.DefaultTheme.xaml?assembly=Avalonia.Themes.Default"/>
     <StyleInclude Source="resm:Avalonia.Themes.Default.Accents.BaseLight.xaml?assembly=Avalonia.Themes.Default"/>
+
+    <Style Selector="TextBlock.h1">
+      <Setter Property="Foreground" Value="#212121"/>
+      <Setter Property="FontSize" Value="20"/>
+      <Setter Property="FontWeight" Value="Medium"/>
+    </Style>
+
+    <Style Selector="TextBlock.h2">
+      <Setter Property="Foreground" Value="#727272"/>
+      <Setter Property="FontSize" Value="13"/>
+    </Style>
+    <Style Selector="TextBlock.Code">
+			<Setter Property="FontSize" Value="12" />
+			<Setter Property="FontFamily" Value="Courier New" />
+      <Setter Property="FontWeight" Value="bold"/>
+		</Style>
+    <Style Selector="TextBlock.CodeLarge">
+			<Setter Property="FontSize" Value="16" />
+			<Setter Property="FontFamily" Value="Courier New" />
+      <Setter Property="FontWeight" Value="bold"/>
+		</Style>
+    <Style Selector="TabControl.TopBar">
+			<!--<Setter Property="Background" Value="#99e6ff" />-->
+		</Style>
   </Application.Styles>
 </Application>

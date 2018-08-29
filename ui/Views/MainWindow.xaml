@@ -1,13 +1,79 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="clr-namespace:ui.ViewModels;assembly=ui"
-        Icon="resm:ui.Assets.avalonia-logo.ico"
-        Title="ui">
+<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:vm="clr-namespace:ui.ViewModels;assembly=ui" Icon="resm:ui.Assets.avalonia-logo.ico" Title="ui">
+	<Design.DataContext>
+    	<vm:MainWindowViewModel/>
+	</Design.DataContext>
+	
+	<TabControl Classes="TopBar">
+		<TabControl.Transition>
+			<CrossFade Duration="0.25" />
+		</TabControl.Transition>
+		<TabItem Header="Dashboard">
+			<StackPanel>
+				<TextBlock Classes="Code" Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-  <Design.DataContext>
-    <vm:MainWindowViewModel/>
-  </Design.DataContext>
-  
-  <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>    
-  
+			</StackPanel>
+		</TabItem>
+		<TabItem Header="Raw Data">
+			<ScrollViewer>
+				<TextBlock Classes="Code" Text="{Binding RawData}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			</ScrollViewer>
+		</TabItem>
+		<TabItem Header="Exemplar Data">
+			<ScrollViewer>
+				<TextBlock Classes="Code" Text="{Binding ExemplarData}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			</ScrollViewer>
+		</TabItem>
+		<TabItem Header="Training Data">
+			<ScrollViewer>
+				<TextBlock Classes="Code" Text="{Binding TrainingData}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			</ScrollViewer>
+		</TabItem>
+		<TabItem Header="Testing Data">
+			<ScrollViewer>
+				<TextBlock Classes="Code" Text="{Binding TestingData}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			</ScrollViewer>
+		</TabItem>
+		<TabItem Header="Validation Data">
+			<ScrollViewer>
+				<TextBlock Classes="Code" Text="{Binding ValidationData}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			</ScrollViewer>
+		</TabItem>
+		<TabItem Header="Output">
+			<TabControl TabStripPlacement="Left">
+				<TabControl.Transition>
+					<CrossFade Duration="0.25" />
+				</TabControl.Transition>
+				<TabItem Header="Raw">
+					<ScrollViewer>
+						<TextBlock Classes="Code" Text="{Binding RawOutput}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+					</ScrollViewer>
+				</TabItem>
+				<TabItem Header="Train Confusion matrix">
+					<TextBlock Classes="CodeLarge" Text="{Binding ConfusionMatrixTrain}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+				</TabItem>
+				<TabItem Header="Test Confusion matrix">
+					<TextBlock Classes="CodeLarge" Text="{Binding ConfusionMatrixTest}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+				</TabItem>
+				<TabItem Header="Validation Confusion matrix">
+					<TextBlock Classes="CodeLarge" Text="{Binding ConfusionMatrixVal}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+				</TabItem>
+
+				<TabItem Header="Train Output">
+					<ScrollViewer>
+						<TextBlock Classes="Code" Text="{Binding OutputMatrixTrain}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+					</ScrollViewer>
+				</TabItem>
+				<TabItem Header="Test Output">
+					<ScrollViewer>
+						<TextBlock Classes="Code" Text="{Binding OutputMatrixTest}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+					</ScrollViewer>
+				</TabItem>
+				<TabItem Header="Validation Output">
+					<ScrollViewer>
+						<TextBlock Classes="Code" Text="{Binding OutputMatrixVal}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+					</ScrollViewer>
+				</TabItem>
+			</TabControl>
+		</TabItem>
+	</TabControl>
 </Window>

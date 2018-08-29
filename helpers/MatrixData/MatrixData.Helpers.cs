@@ -6,30 +6,52 @@ namespace helpers
 {
     public partial class MatrixData
     {
-        public string Head(int numberOfRows = 5, int colWidth = 10)
+        public bool LabeledRows {get;set;} = false;
+        public string Head(int numberOfRows = 5, int colWidth = 10, bool? printRowLabels = null)
         {
             string output ="";
+            bool printRowLabs = (printRowLabels == null)? false : true;
+            printRowLabs = (printRowLabs|LabeledRows)? true:false;
+            var row1 = (NumberOfColumns*colWidth);
+            var row2 = (Convert.ToInt32(printRowLabs)*colWidth);
+            int rowWidth = (NumberOfColumns*colWidth)+(Convert.ToInt32(printRowLabs)*colWidth);
+
+            output += (printRowLabs)? ColValue(NumberOfRows.ToString()+"x"+NumberOfColumns.ToString()) + '|' : "";
             foreach (string h in _headers)
             {
                 output += ColValue(h) + '|';
             }
             output += Environment.NewLine;
 
+            output += (printRowLabs)? ColValue("Row") + '|' : "";
             foreach (Type t in _columnDataTypes)
             {
                 output += ColValue(t.Name,'-') + '|';
             }
             output += Environment.NewLine;
 
-            output += new String('-', NumberOfColumns*colWidth).ToString();
+            output += new String('-', rowWidth).ToString();
             
             for (int r = 0; r<numberOfRows;r++)
             {
                 output += Environment.NewLine;
-                for (int c = 0; c < NumberOfColumns; c++)
+                output += MakeRow(r);
+                
+            }
+
+            string MakeRow(int row)
+            {
+                string outRow = "";                
+                if (printRowLabs)
                 {
-                    output += ColValue(_data[r,c].ToString()) + '|';
+                    outRow += ColValue(_rowNames[row].ToString()) + '|';
                 }
+
+                for (int col = 0; col < NumberOfColumns; col++)
+                {
+                    outRow += ColValue(_data[row,col].ToString()) + '|';
+                }
+                return outRow;
             }
 
             string ColValue(string value, char fill = ' ')
@@ -55,9 +77,23 @@ namespace helpers
                 }
                 return " "+valueToWrite+" ";
             }
+
+            
             return output;
         }
 
+        private static T[,] Make2DArray<T>(T[] input, int numcols =1)
+        {
+            T[,] output = new T[input.Length, numcols];
+            for (int row = 0; row < input.Length; row++)
+            {
+                for (int col = 0; col<numcols;col++)
+                {
+                    output[row,col] = input[row];
+                }
+            }
+            return output;
+        }
         public void CopyMetaData(MatrixData data)
         {
             var copiedHeaders = data._headers.Clone() as string[];
@@ -100,6 +136,10 @@ namespace helpers
         public override string ToString()
         {
             return Head(NumberOfRows);
+        }
+        public string ToString(int colWidth)
+        {
+            return Head(NumberOfRows,colWidth,true);
         }
 
         private List<Type> numaricTypes = new List<Type>{typeof(double),typeof(int),typeof(decimal)};

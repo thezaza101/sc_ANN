@@ -10,10 +10,13 @@ namespace helpers
             //This method will split the data based on the input and return it
             //it will also remove the data that was split from _data
             MatrixData splitData = new MatrixData(this, rowStart, colStart, numRows, numCols);
-            int rowsToKeep = (rowStart==0)? NumberOfRows : NumberOfRows-rowStart;
-            int colsToKeep = (colStart==0)? NumberOfColumns: NumberOfColumns-colStart;;
-            TopSplit(0,rowsToKeep);
-            LeftSplit(0,colsToKeep);
+
+            int rowsToKeep = NumberOfRows - numRows;
+            int colsToKeep = NumberOfColumns-numCols;
+            int splitRowStart = rowStart + numRows;
+            int splitColStart = colStart + numCols;
+            TopSplit(splitRowStart,rowsToKeep);
+            LeftSplit(splitColStart,colsToKeep);
             return splitData;
         }
 
@@ -54,6 +57,14 @@ namespace helpers
             data[row] = newRow;
             _data = data.ToRectangular();
         }
+
+        public void ChangeHeader(string[] colNames)
+        {
+            for (int i = 0; i < colNames.Length; i++)
+            {
+                ChangeHeader(i, colNames[i]);
+            }
+        }
         public void ChangeHeader(int col, string value)
         {
             _headers[col] = value;
@@ -73,25 +84,77 @@ namespace helpers
             }
             _rowNames[row] = value;
         }
-
-
+        public void SetValue(int row, int col, dynamic value)
+        {
+            _data[row,col] = value;
+        }
+        public void SetValue(int row, int col, Func<dynamic> ValueFunction)
+        {
+            _data[row,col] = ValueFunction();
+        }
+        public void SetAll(dynamic value)
+        {
+            for(int row = 0; row < NumberOfRows; row++)
+            {
+                for (int col = 0; col < NumberOfColumns; col++)
+                {
+                    SetValue(row,col, value);
+                }
+            }
+        }
+        public void SetAll(Func<dynamic> ValueFunction)
+        {
+            for(int row = 0; row < NumberOfRows; row++)
+            {
+                for (int col = 0; col < NumberOfColumns; col++)
+                {
+                    SetValue(row,col, ValueFunction);
+                }
+            }
+        }
         //https://stackoverflow.com/questions/30164019/shuffling-2d-array-of-cards
         public void Suffle()
         {
             Random random = new Random();
             dynamic[][] data = _data.ToJagged();
+
+            for (int row = 0; row<NumberOfRows; row++)
+            {
+                dynamic[] currRow = data[row].Clone() as dynamic[];
+                dynamic[] newRow = new dynamic[currRow.Length+1];
+                newRow[0] = _rowNames[row];
+                for (int col = 1; col<newRow.Length; col++)
+                {
+                    newRow[col] = currRow[col-1];
+                }
+                data[row] = newRow;             
+            }
+            
             data = data.OrderBy(t => random.Next()).ToArray();
+
+            for (int row = 0; row<NumberOfRows; row++)
+            {
+                dynamic[] currRow = data[row].Clone() as dynamic[];
+                dynamic[] newRow = new dynamic[currRow.Length-1];
+                _rowNames[row] = currRow[0];
+                for (int col = 1; col<currRow.Length; col++)
+                {
+                    newRow[col-1] = currRow[col];
+                }           
+                data[row] = newRow;       
+            }
+
             _data = data.ToRectangular();
         }
         public void Transpose()
         {
-            dynamic[,] output = new dynamic[NumberOfRows, NumberOfColumns];
+            dynamic[,] output = new dynamic[NumberOfColumns, NumberOfRows];
 
-            for (int i = 0; i < NumberOfColumns; i++)
+            for (int row = 0; row < NumberOfRows; row++) 
             {
-                for (int j = 0; j < NumberOfRows; j++)
+                for (int col = 0; col < NumberOfColumns; col++) 
                 {
-                    output[j, i] = _data[i, j];
+                    output[col, row] = _data[row, col];
                 }
             }
             _data = output;
@@ -131,10 +194,13 @@ namespace helpers
                 //exemplarData.ReSetColTypes();
             }
             exemplarData.CopyMetaData(this);
-            exemplarData.DetermineColType(cols-1);
+            string headerName = (string.IsNullOrWhiteSpace(colName))? "Exemplar " : colName;
+            for (int i = 1; i<=numClasses;i++)
+            {
+                exemplarData.DetermineColType(cols-i);
+                exemplarData.ChangeHeader(cols-i, headerName+(numClasses-i+1));
+            }
 
-            string headerName = (string.IsNullOrWhiteSpace(colName))? "Exemplar(" + col+","+ numClasses+"," + startAt+")" : colName;
-            exemplarData.ChangeHeader(cols-1, headerName);
             return exemplarData;
         }
 
@@ -153,6 +219,7 @@ namespace helpers
         public void TopSplit(int rowStart, int numRowsToKeep)
         {
             dynamic[,] newData = new dynamic[numRowsToKeep,NumberOfColumns];
+            string[] newRowNames = new string[numRowsToKeep];
 
             for (int row = rowStart; row < rowStart+numRowsToKeep; row++) 
             {
@@ -160,8 +227,10 @@ namespace helpers
                 {
                     newData[row-rowStart, col] = _data[row, col];
                 }
+                newRowNames[row-rowStart] = _rowNames[row];
             }
             _data = newData;
+            _rowNames = newRowNames;
             NumberOfRows = numRowsToKeep;
         }
 
