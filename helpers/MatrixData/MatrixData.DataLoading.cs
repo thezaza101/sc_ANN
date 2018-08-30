@@ -132,7 +132,7 @@ namespace helpers
                 _headers = new string[numCols];
                 for (int i = 0; i<numCols;i++)
                 {
-                    _headers[i] = (i+1).ToString();
+                    _headers[i] = (i).ToString();
                 }
                 //_headers = Enumerable.Repeat(string.Empty, SplitCsvLine(headersLine,delimiter).Length).ToArray();
             }         
@@ -146,7 +146,7 @@ namespace helpers
                 _rowNames = new string[NumberOfRows];
                 for (int i = 0; i<NumberOfRows;i++)
                 {
-                    _rowNames[i] = (i+1).ToString();
+                    _rowNames[i] = (i).ToString();
                 }
             }
         }

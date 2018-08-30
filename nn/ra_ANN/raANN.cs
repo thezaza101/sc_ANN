@@ -98,11 +98,11 @@ namespace nn
             s += "\n\n";
 
             s += "ihWeights: \n";
-            for (int i = 0; i < ihWeights.Length; ++i)
+            for (int i = 0; i < ihWeights.NumberOfRows; ++i)
             {
-                for (int j = 0; j < ihWeights[i].Length; ++j)
+                for (int j = 0; j < ihWeights.NumberOfColumns; ++j)
                 {
-                    s += ihWeights[i,j].ToDouble().ToString("F4") + " ";
+                    s += ihWeights[i,j].ToString("F4") + " ";
                 }
                 s += "\n";
             }
@@ -119,11 +119,11 @@ namespace nn
             s += "\n\n";
 
             s += "hoWeights: \n";
-            for (int i = 0; i < hoWeights.Length; ++i)
+            for (int i = 0; i < hoWeights.NumberOfRows; ++i)
             {
-                for (int j = 0; j < hoWeights[i].Length; ++j)
+                for (int j = 0; j < hoWeights.NumberOfColumns; ++j)
                 {
-                    s += hoWeights[i,j].ToDouble().ToString("F4") + " ";
+                    s += hoWeights[i,j].ToString("F4") + " ";
                 }
                 s += "\n";
             }
@@ -145,11 +145,11 @@ namespace nn
             s += "\n\n";
 
             s += "ihPrevWeightsDelta: \n";
-            for (int i = 0; i < ihPrevWeightsDelta.Length; ++i)
+            for (int i = 0; i < ihPrevWeightsDelta.NumberOfRows; ++i)
             {
-                for (int j = 0; j < ihPrevWeightsDelta[i].Length; ++j)
+                for (int j = 0; j < ihPrevWeightsDelta.NumberOfColumns; ++j)
                 {
-                    s += ihPrevWeightsDelta[i,j].ToDouble().ToString("F4") + " ";
+                    s += ihPrevWeightsDelta[i,j].ToString("F4") + " ";
                 }
                 s += "\n";
             }
@@ -161,11 +161,11 @@ namespace nn
             s += "\n\n";
 
             s += "hoPrevWeightsDelta: \n";
-            for (int i = 0; i < hoPrevWeightsDelta.Length; ++i)
+            for (int i = 0; i < hoPrevWeightsDelta.NumberOfRows; ++i)
             {
-                for (int j = 0; j < hoPrevWeightsDelta[i].Length; ++j)
+                for (int j = 0; j < hoPrevWeightsDelta.NumberOfColumns; ++j)
                 {
-                    s += hoPrevWeightsDelta[i,j].ToDouble().ToString("F4") + " ";
+                    s += hoPrevWeightsDelta[i,j].ToString("F4") + " ";
                 }
                 s += "\n";
             }
@@ -228,12 +228,12 @@ namespace nn
             int k = 0;
             for (int i = 0; i < ihWeights.Length; ++i)
                 for (int j = 0; j < ihWeights[0].Length; ++j)
-                    result[k++] = ihWeights[i,j].ToDouble();
+                    result[k++] = ihWeights[i,j];
             for (int i = 0; i < hBiases.Length; ++i)
                 result[k++] = hBiases[i];
             for (int i = 0; i < hoWeights.Length; ++i)
                 for (int j = 0; j < hoWeights[0].Length; ++j)
-                    result[k++] = hoWeights[i][j].ToDouble();
+                    result[k++] = hoWeights[i][j];
             for (int i = 0; i < oBiases.Length; ++i)
                 result[k++] = oBiases[i];
             return result;
@@ -254,7 +254,7 @@ namespace nn
 
             for (int j = 0; j < numHidden; ++j)  // compute i-h sum of weights * inputs
                 for (int i = 0; i < numInput; ++i)
-                    hSums[j] += inputs[i] * ihWeights[i,j].ToDouble(); // note +=
+                    hSums[j] += inputs[i] * ihWeights[i,j]; // note +=
 
             for (int i = 0; i < numHidden; ++i)  // add biases to input-to-hidden sums
                 hSums[i] += this.hBiases[i];
@@ -264,7 +264,7 @@ namespace nn
 
             for (int j = 0; j < numOutput; ++j)   // compute h-o sum of weights * hOutputs
                 for (int i = 0; i < numHidden; ++i)
-                    oSums[j] += hOutputs[i] * hoWeights[i][j].ToDouble();
+                    oSums[j] += hOutputs[i] * hoWeights[i][j];
 
             for (int i = 0; i < numOutput; ++i)  // add biases to input-to-hidden sums
                 oSums[i] += oBiases[i];
@@ -352,7 +352,7 @@ namespace nn
                 double sum = 0.0;
                 for (int j = 0; j < numOutput; ++j) // each hidden delta is the sum of numOutput terms
                 {
-                    double x = oGrads[j] * hoWeights[i,j].ToDouble();
+                    double x = oGrads[j] * hoWeights[i,j];
                     sum += x;
                 }
                 hGrads[i] = derivative * sum;
@@ -360,15 +360,15 @@ namespace nn
 
             // 3a. update hidden weights (gradients must be computed right-to-left but weights
             // can be updated in any order)
-            for (int i = 0; i < ihWeights.Length; ++i) // 0..2 (3)
+            for (int i = 0; i < ihWeights.NumberOfRows; ++i) // 0..2 (3)
             {
-                for (int j = 0; j < ihWeights[0].Length; ++j) // 0..3 (4)
+                for (int j = 0; j < ihWeights.NumberOfColumns; ++j) // 0..3 (4)
                 {
                     double delta = learnRate * hGrads[j] * inputs[i]; // compute the new delta
-                    ihWeights[i,j] = ihWeights[i,j].Add(delta); // update. note we use '+' instead of '-'. this can be very tricky.
+                    ihWeights[i,j] = ihWeights[i,j]+delta; // update. note we use '+' instead of '-'. this can be very tricky.
                                               // now add momentum using previous delta. on first pass old value will be 0.0 but that's OK.
-                    if (momentum > 0) ihWeights[i,j] = ihWeights[i,j].Add(momentum * ihPrevWeightsDelta[i,j].ToDouble());
-                    if (weightDecay > 0) ihWeights[i,j] = ihWeights[i,j].Subtract(weightDecay * ihWeights[i,j].ToDouble()); // weight decay
+                    if (momentum > 0) ihWeights[i,j] = ihWeights[i,j] + (momentum * ihPrevWeightsDelta[i,j]);
+                    if (weightDecay > 0) ihWeights[i,j] = ihWeights[i,j] - (weightDecay * ihWeights[i,j]); // weight decay
                     ihPrevWeightsDelta[i][j] = delta; // don't forget to save the delta for momentum 
                 }
             }
@@ -384,15 +384,15 @@ namespace nn
             }
 
             // 4. update hidden-output weights
-            for (int i = 0; i < hoWeights.Length; ++i)
+            for (int i = 0; i < hoWeights.NumberOfRows; ++i)
             {
-                for (int j = 0; j < hoWeights[0].Length; ++j)
+                for (int j = 0; j < hoWeights.NumberOfColumns; ++j)
                 {
                     // see above: hOutputs are inputs to the nn outputs
                     double delta = learnRate * oGrads[j] * hOutputs[i];
-                    hoWeights[i,j] = hoWeights[i,j].Add(delta);
-                    if (momentum > 0) hoWeights[i,j] = hoWeights[i,j].Add(momentum * hoPrevWeightsDelta[i,j].ToDouble()); // momentum
-                    if (weightDecay > 0) hoWeights[i][j] = hoWeights[i,j].Subtract(weightDecay * hoWeights[i,j].ToDouble()); // weight decay
+                    hoWeights[i,j] = hoWeights[i,j] + delta;
+                    if (momentum > 0) hoWeights[i,j] = hoWeights[i,j] + (momentum * hoPrevWeightsDelta[i,j]); // momentum
+                    if (weightDecay > 0) hoWeights[i][j] = hoWeights[i,j] - (weightDecay * hoWeights[i,j]); // weight decay
                     hoPrevWeightsDelta[i][j] = delta; // save
                 }
             }
@@ -505,6 +505,18 @@ namespace nn
             //progressBar.Value = 100;
         } // Train
 
+        public MatrixData GetConfusionMatrix()
+        {
+            MatrixData output = new MatrixData(numOutput,numOutput);            
+            for (int y = 0; y < numOutput; y++)
+            {
+                for (int x = 0; x < numOutput; x++)
+                {
+                    output[x,y] = confusionMatrix[x, y];
+                }
+            }
+            return output;
+        }
         private void Shuffle(int[] sequence)
         {
             for (int i = 0; i < sequence.Length; ++i)
@@ -555,7 +567,7 @@ namespace nn
             {
                 for (int x = 0; x < numOutput; x++)
                 {
-                    string temp = confusionMatrix[x,y].ToInt32().ToString("D");
+                    string temp = ((int)confusionMatrix[x,y]).ToString("D");
                     temp = temp.PadLeft(4);
                     retv = retv + temp + " ";
                     if (x != numOutput - 1) retv = retv + "| ";
@@ -645,7 +657,7 @@ namespace nn
                 if (maxIndexOut == maxIndexExpected) numCorrect++;
                 else numWrong++;
 
-                confusionMatrix[maxIndexExpected, maxIndexOut] = confusionMatrix[maxIndexExpected, maxIndexOut].ToInt32() + 1;
+                confusionMatrix[maxIndexExpected, maxIndexOut] = confusionMatrix[maxIndexExpected, maxIndexOut] + 1;
                 confusionMatrixCnt++;
 
                 //if (tValues[maxIndex] == 1.0) // ugly. consider AreEqual(double x, double y)

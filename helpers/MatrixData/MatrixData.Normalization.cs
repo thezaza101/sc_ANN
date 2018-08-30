@@ -103,73 +103,44 @@ namespace helpers
         //Finds the minimum value for the given column
         public double Min(int col)
         {
-            if(IsValueNumaric(col))
+            double min = _data[0,col];            
+            //find the minimum value in the column
+            for (int row = 1; row < NumberOfRows; row++)
             {
-                double min = _data[0,col];            
-                //find the minimum value in the column
-                for (int row = 1; row < NumberOfRows; row++)
-                {
-                    double currentVal = _data[row,col];
-                    min = (currentVal < min)? currentVal : min;
-                }
-                return min;
+                double currentVal = _data[row,col];
+                min = (currentVal < min)? currentVal : min;
             }
-            else 
-            {
-                throw new InvalidOperationException("Cannot find minimum of non numaric value");
-            }
+            return min;
         }
 
         //Finds the maximum value for the given column
         public double Max(int col)
         {
-            if(IsValueNumaric(col))
+            double max = _data[0,col];           
+            //find the maximum value in the column
+            for (int row = 1; row < NumberOfRows; row++)
             {
-                double max = _data[0,col];           
-                //find the maximum value in the column
-                for (int row = 1; row < NumberOfRows; row++)
-                {
-                    double currentVal = _data[row,col];
-                    max = (currentVal > max)? currentVal : max;
-                }
-                return max;
+                double currentVal = _data[row,col];
+                max = (currentVal > max)? currentVal : max;
             }
-            else 
-            {
-                throw new InvalidOperationException("Cannot find maximum of non numaric value");
-            }
-
+            return max;
         }
 
         //Find the Mean (average) value for the given column
         public double Mean(int col)
         {
-            if(IsValueNumaric(col))
-            {
-                return Sum(col) / NumberOfRows;
-            }
-            else 
-            {
-                throw new InvalidOperationException("Cannot find minimum of non numaric value");
-            }
+            return Sum(col) / NumberOfRows;
         }
 
         //Find the sum of a column
         public double Sum (int col)
         {
-            if(IsValueNumaric(col))
+            double sum = 0;
+            for (int row = 0; row < NumberOfRows; row++)
             {
-                double sum = 0;
-                for (int row = 0; row < NumberOfRows; row++)
-                {
-                    sum+= _data[row,col];
-                }
-                return sum;
+                sum+= _data[row,col];
             }
-            else 
-            {
-                throw new InvalidOperationException("Cannot find minimum of non numaric value");
-            }
+            return sum;
         }
 
         

@@ -49,11 +49,11 @@ namespace helpers
 
         public T[] GetColumnCopy<T>(string colName)
         {
-            return Columns(Array.FindIndex(_headers,c => c.Equals(colName))).Clone() as T[];
+            return Array.ConvertAll<dynamic, T>(Columns(Array.FindIndex(_headers,c => c.Equals(colName))), x=> (T)x);
         }
         public T[] GetColumnCopy<T>(int col)
         {
-            return Columns(col).Clone() as T[];
+            return Array.ConvertAll<dynamic, T>(Columns(col), x=> (T)x);
         }
         public MatrixData GetColumnCopy(string colName)
         {

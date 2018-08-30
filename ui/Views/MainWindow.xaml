@@ -3,14 +3,52 @@
     	<vm:MainWindowViewModel/>
 	</Design.DataContext>
 	
-	<TabControl Classes="TopBar">
+	<TabControl Classes="TopBar" Name="TestName">
 		<TabControl.Transition>
 			<CrossFade Duration="0.25" />
 		</TabControl.Transition>
 		<TabItem Header="Dashboard">
-			<StackPanel>
-				<TextBlock Classes="Code" Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+			<StackPanel Orientation="Horizontal">
+				<ScrollViewer Width="600" VerticalScrollBarValue="{Binding VerticalScrollBarMaximum}">
+						<TextBlock Classes="Code" Text="{Binding RawOutput}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+				</ScrollViewer>
+				
 
+			<!--Right panel-->
+				<StackPanel>
+					<StackPanel> 
+						<StackPanel Orientation="Horizontal"> 
+							<TextBox Text="{Binding CurrentCommand}" AcceptsReturn="False" TextWrapping="Wrap" Width="225" />
+							<Button Command="{Binding RunCommand}" Content="Run" Width="75"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="Input Nodes:" Width="100"/>
+							<TextBox Text="{Binding NumberInputsNodes, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="200" />
+						</StackPanel>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="Hidden Nodes:" Width="100"/>
+							<TextBox Text="{Binding NumberHiddenNodes, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="200" />
+						</StackPanel>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="Output Nodes:" Width="100"/>
+							<TextBox Text="{Binding NumberOutputNodes, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="200" />
+						</StackPanel>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="Epochs:" Width="100"/>
+							<TextBox Text="{Binding NumberOfEpochs, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="200" />
+						</StackPanel>
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="Learning Rate:" Width="100"/>
+							<TextBox Text="{Binding LearningRate_eta, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="200" />
+						</StackPanel>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal"> 
+						<Button Command="{Binding RunAll}" Content="Run All" Width="75"/>
+						<Button Command="{Binding ShowPlot}" Content="Show Plot" Width="75"/>
+						<Button Command="{Binding SaveState}" Content="Save State" Width="75"/>
+						<Button Command="{Binding LoadState}" Content="Load State" Width="75"/>
+					</StackPanel>
+				</StackPanel>
 			</StackPanel>
 		</TabItem>
 		<TabItem Header="Raw Data">
@@ -45,7 +83,7 @@
 				</TabControl.Transition>
 				<TabItem Header="Raw">
 					<ScrollViewer>
-						<TextBlock Classes="Code" Text="{Binding RawOutput}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+						<TextBlock Classes="Code" Text="{Binding RawOutput, Mode=TwoWay}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 					</ScrollViewer>
 				</TabItem>
 				<TabItem Header="Train Confusion matrix">
@@ -71,6 +109,11 @@
 				<TabItem Header="Validation Output">
 					<ScrollViewer>
 						<TextBlock Classes="Code" Text="{Binding OutputMatrixVal}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+					</ScrollViewer>
+				</TabItem>
+				<TabItem Header="Graph Data">
+					<ScrollViewer>
+						<TextBlock Classes="Code" Text="{Binding GraphData}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 					</ScrollViewer>
 				</TabItem>
 			</TabControl>

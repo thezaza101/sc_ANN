@@ -11,7 +11,7 @@ namespace nn
     public class W4NeuralNetwork
     {
         private static Random rnd;
-
+        public MatrixData GraphData;
         private int numInput;
         private int numHidden;
         private int numOutput;
@@ -400,6 +400,10 @@ namespace nn
         /// <param name="learnRate"></param>
         public void train(double[][] trainData, double [][] testData, int maxEpochs, double learnRate, string logFileName)
         {
+            GraphData = new MatrixData(maxEpochs,3);
+            GraphData.ChangeHeader(0,"Epoch");
+            GraphData.ChangeHeader(1,"Train Accuracy");
+            GraphData.ChangeHeader(2,"Test Accuracy");
             // train a back-prop style NN classifier using learning rate and momentum
             // weight decay reduces the magnitude of a weight value over time unless that value
             // is constantly increased
@@ -436,6 +440,10 @@ namespace nn
                     linez = linez + trainAccuracy.ToString("F2") + "% " + testAccuracy.ToString("F2") + "% ";
                     linez = linez + Environment.NewLine;
                     writer.Write(linez);
+                    GraphData[epoch,0] = epoch;
+                    GraphData[epoch,1] = trainAccuracy;
+                    GraphData[epoch,2] = testAccuracy;
+
                     epoch++;
                 }
             }

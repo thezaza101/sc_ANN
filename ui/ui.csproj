@@ -16,6 +16,8 @@
     <PackageReference Include="Avalonia" Version="0.6.0" />
     <PackageReference Include="Avalonia.Desktop" Version="0.6.0" />
     <PackageReference Include="Avalonia.ReactiveUI" Version="0.6.0" />
+    <PackageReference Include="newtonsoft.json" Version="11.0.2" />
+    <PackageReference Include="PLplot" Version="5.13.7" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\nn\nn.csproj" />

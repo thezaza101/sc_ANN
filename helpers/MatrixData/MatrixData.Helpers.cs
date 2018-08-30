@@ -23,7 +23,7 @@ namespace helpers
             }
             output += Environment.NewLine;
 
-            output += (printRowLabs)? ColValue("Row") + '|' : "";
+            output += (printRowLabs)? ColValue("...") + '|' : "";
             foreach (Type t in _columnDataTypes)
             {
                 output += ColValue(t.Name,'-') + '|';
