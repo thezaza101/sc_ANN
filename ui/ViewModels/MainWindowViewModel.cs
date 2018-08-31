@@ -83,12 +83,13 @@ namespace ui.ViewModels
         {
             
         }
-        public void RunCommand()
+        public void RunCommand(object s = null)
         {
             Log(CurrentCommand);
             CurrentCommand = "";
-            
         }
+
+
         public void ShowPlot()
         {
             string filePath = Directory.GetCurrentDirectory()+"\\Test.svg";

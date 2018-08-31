@@ -200,7 +200,7 @@ namespace ui
             plot.scolbg(255,255,255);
             plot.init();
             
-            plot.env(0,xMax,yMin,yMax+5,AxesScale.Independent,AxisBox.BoxTicksLabelsAxes);
+            plot.env(0,xMax,0,yMax+5,AxesScale.Independent,AxisBox.BoxTicksLabelsAxes);
 
             //####### PLPlot colour guide:
             //0	black (default background)
@@ -236,6 +236,11 @@ namespace ui
             plot.eop();
 
             return "";
+        }
+
+        public string ConvertPlotToString()
+        {
+            throw new NotImplementedException();
         }
 
         

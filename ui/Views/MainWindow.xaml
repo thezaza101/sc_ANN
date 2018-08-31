@@ -1,4 +1,7 @@
-<Window xmlns="https://github.com/avaloniaui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:vm="clr-namespace:ui.ViewModels;assembly=ui" Icon="resm:ui.Assets.avalonia-logo.ico" Title="ui">
+<Window xmlns="https://github.com/avaloniaui" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+	xmlns:vm="clr-namespace:ui.ViewModels;assembly=ui" 
+	Icon="resm:ui.Assets.avalonia-logo.ico" Title="ANN Runner" Width="1200" MaxWidth="1200">
 	<Design.DataContext>
     	<vm:MainWindowViewModel/>
 	</Design.DataContext>
@@ -9,17 +12,15 @@
 		</TabControl.Transition>
 		<TabItem Header="Dashboard">
 			<StackPanel Orientation="Horizontal">
-				<ScrollViewer Width="600" VerticalScrollBarValue="{Binding VerticalScrollBarMaximum}">
-						<TextBlock Classes="Code" Text="{Binding RawOutput}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-				</ScrollViewer>
-				
-
+				<ScrollViewer Width="880" Name="svRawOutput" VerticalContentAlignment="Bottom">
+					<TextBlock Classes="Code" Name="tbRawOutput" Text="{Binding RawOutput}" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+				</ScrollViewer>				
 			<!--Right panel-->
 				<StackPanel>
 					<StackPanel> 
 						<StackPanel Orientation="Horizontal"> 
-							<TextBox Text="{Binding CurrentCommand}" AcceptsReturn="False" TextWrapping="Wrap" Width="225" />
-							<Button Command="{Binding RunCommand}" Content="Run" Width="75"/>
+							<TextBox Text="{Binding CurrentCommand}" Name="tbCurrentCommand" AcceptsReturn="False" TextWrapping="Wrap" Width="225" />
+							<Button Command="{Binding RunCommand}" Name="btnRunCommand" Content="Run" Width="75"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Text="Input Nodes:" Width="100"/>
