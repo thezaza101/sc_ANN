@@ -1,11 +1,11 @@
 <Window xmlns="https://github.com/avaloniaui" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
 	xmlns:vm="clr-namespace:ui.ViewModels;assembly=ui" 
-	Icon="resm:ui.Assets.avalonia-logo.ico" Title="ANN Runner" Width="1200" MaxWidth="1200">
+	Icon="resm:ui.Assets.avalonia-logo.ico" Title="ANN Runner" 
+	Width="1200" MaxWidth="1200" Height="700" MaxHeight="700">
 	<Design.DataContext>
     	<vm:MainWindowViewModel/>
 	</Design.DataContext>
-	
 	<TabControl Classes="TopBar" Name="TestName">
 		<TabControl.Transition>
 			<CrossFade Duration="0.25" />
@@ -48,6 +48,12 @@
 						<Button Command="{Binding ShowPlot}" Content="Show Plot" Width="75"/>
 						<Button Command="{Binding SaveState}" Content="Save State" Width="75"/>
 						<Button Command="{Binding LoadState}" Content="Load State" Width="75"/>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal"> 
+						<Button Command="{Binding RunAll}" Content="Clear" Width="75"/>
+						<Button Content="..." Width="75"/>
+						<Button Content="..." Width="75"/>
+						<Button Content="..." Width="75"/>
 					</StackPanel>
 				</StackPanel>
 			</StackPanel>

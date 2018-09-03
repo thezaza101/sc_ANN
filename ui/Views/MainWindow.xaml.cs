@@ -11,20 +11,23 @@ namespace ui.Views
         public MainWindow()
         {
             InitializeComponent();
+
             var annTab = this.Get<TabControl>("TestName");
-            //HorizontalContentAlignment
+            
             var tbRaw = this.Get<TextBlock>("tbRawOutput");
             tbRaw.PropertyChanged += (s,e) => {
                 var svRaw = this.Get<ScrollViewer>("svRawOutput");
                 svRaw.Offset = new Vector(svRaw.Offset.X, svRaw.Extent.Height -svRaw.Viewport.Height);
             };
+
             Button btnCmd  = this.Get<Button>("btnRunCommand");
             var commandTextBox = this.Get<TextBox>("tbCurrentCommand");
             commandTextBox.KeyUp += (s,e) => {
                 if(e.Key == Key.Enter)
                 {
                     btnCmd.Command.Execute(s);        
-                    e.Handled = true;                                
+                    e.Handled = true;       
+                    //This causes an error                         
                 }
             };
         }

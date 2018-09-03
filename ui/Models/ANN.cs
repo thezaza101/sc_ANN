@@ -7,20 +7,29 @@ namespace ui
 {
     public class ANN
     {
-        public MatrixData RawData {get{return (_rawData==null)? new MatrixData(5,5) : _rawData;}}
-        public MatrixData ExemplarData {get{return (_exemplarData==null)? new MatrixData(5,5) : _exemplarData;}}
-        public MatrixData TrainingData {get{return (_trainingData==null)? new MatrixData(5,5) : _trainingData;}}
-        public MatrixData TestingData {get{return (_testingData==null)? new MatrixData(5,5) : _testingData;}}
-        public MatrixData ValidationData {get{return (_validationData==null)? new MatrixData(5,5) : _validationData;}}
+        MatrixData noData = new MatrixData(
+            new string[][] 
+            {
+                new string[]{"N","D"},
+                new string[]{"o","a"},
+                new string[]{" ","t"},
+                new string[]{" ","a"}
+            }
+        );
+        public MatrixData RawData {get{return (_rawData==null)? noData : _rawData;}}
+        public MatrixData ExemplarData {get{return (_exemplarData==null)? noData : _exemplarData;}}
+        public MatrixData TrainingData {get{return (_trainingData==null)? noData : _trainingData;}}
+        public MatrixData TestingData {get{return (_testingData==null)? noData : _testingData;}}
+        public MatrixData ValidationData {get{return (_validationData==null)? noData : _validationData;}}
 
-        public MatrixData ConfusionMatrixTrain {get{return (_confusionMatrixTrain==null)? new MatrixData(5,5) : _confusionMatrixTrain;}}
-        public MatrixData ConfusionMatrixTest {get{return (_confusionMatrixTest==null)? new MatrixData(5,5) : _confusionMatrixTest;}}
-        public MatrixData ConfusionMatrixVal {get{return (_confusionMatrixVal==null)? new MatrixData(5,5) : _confusionMatrixVal;}}
+        public MatrixData ConfusionMatrixTrain {get{return (_confusionMatrixTrain==null)? noData : _confusionMatrixTrain;}}
+        public MatrixData ConfusionMatrixTest {get{return (_confusionMatrixTest==null)? noData : _confusionMatrixTest;}}
+        public MatrixData ConfusionMatrixVal {get{return (_confusionMatrixVal==null)? noData : _confusionMatrixVal;}}
 
-        public MatrixData OutputMatrixTrain {get{return (_outputMatrixTrain==null)? new MatrixData(5,5) : _outputMatrixTrain;}}
-        public MatrixData OutputMatrixTest {get{return (_outputMatrixTest==null)? new MatrixData(5,5) : _outputMatrixTest;}}
-        public MatrixData OutputMatrixVal {get{return (_outputMatrixVal==null)? new MatrixData(5,5) : _outputMatrixVal;}}
-        public MatrixData GraphData {get{return (_graphData==null)? new MatrixData(5,2) : _graphData;}}
+        public MatrixData OutputMatrixTrain {get{return (_outputMatrixTrain==null)? noData : _outputMatrixTrain;}}
+        public MatrixData OutputMatrixTest {get{return (_outputMatrixTest==null)? noData : _outputMatrixTest;}}
+        public MatrixData OutputMatrixVal {get{return (_outputMatrixVal==null)? noData : _outputMatrixVal;}}
+        public MatrixData GraphData {get{return (_graphData==null)? noData : _graphData;}}
 
 
         public int NumberInputsNodes {get;set;} = 4; // from iris data set
@@ -81,6 +90,8 @@ namespace ui
         {
             string output ="";
             _rawData = new MatrixData("iris - Copy.Txt", false,true,' ');
+            //_rawData = new MatrixData("ANN_test.csv", false,true,',');
+
             _rawData.ChangeHeader(0,"Speal.Length");
             _rawData.ChangeHeader(1,"Speal.Width");
             _rawData.ChangeHeader(2,"Petal.Length");
@@ -102,6 +113,7 @@ namespace ui
             output += Environment.NewLine+Environment.NewLine;
 
             _exemplarData = _rawData.GetExemplar(4, 3, 1);
+            //_exemplarData = _rawData.GetExemplar(4, 2, 1);
             //var _tempExemplarData = new MatrixData()
             output += "Exemplar data:"+Environment.NewLine;
             output +=_exemplarData.Head(5,16);
@@ -222,16 +234,23 @@ namespace ui
 
 
             plot.col0(1);
-            plot.lab("Epoch","Accuracy %","Pink = Train, Purple = Test");
+            plot.lab("Epoch","Accuracy %","Test vs Train Accuracy");
+            plot.ptex(xMax-10,25,1.0,0,1,"Input Nodes: "+NumberInputsNodes);
+            plot.ptex(xMax-10,20,1.0,0,1,"Hidden Nodes: "+NumberHiddenNodes);
+            plot.ptex(xMax-10,15,1.0,0,1,"Output Nodes: "+NumberOutputNodes);
+            plot.ptex(xMax-10,10,1.0,0,1,"Epochs: "+NumberOfEpochs);
+            plot.ptex(xMax-10,5,1.0,0,1,"Learning Rate: "+LearningRate_eta);
             plot.col0(1);
 
-            plot.col0(5);
+            plot.col0(13);
             plot.line(x,y);
-            plot.col0(5);
+            plot.ptex(xMax-10,35,1.0,0,1,"Pink: Train");
+            plot.col0(13);
             
-            plot.col0(10);
+            plot.col0(8);
             plot.line(x,y1);
-            plot.col0(10);
+            plot.ptex(xMax-10,30,1.0,0,1,"Brown: Test");
+            plot.col0(8);
 
             plot.eop();
 

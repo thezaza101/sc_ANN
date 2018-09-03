@@ -124,7 +124,8 @@ namespace ui.ViewModels
             var file = sr.ReadToEnd();
             sr.Close();
             var x = JsonConvert.DeserializeObject<ANN>(file);
-            
+            _ANN = x;
+            UpdateAllProperties();
         }
 
 
