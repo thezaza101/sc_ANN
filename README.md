@@ -14,6 +14,7 @@ Download the .NET Core SDK from https://www.microsoft.com/net/download (this pro
 Install git from https://git-scm.com/ (This is optional however highly recommended, very much worthwhile learning if you intend on becoming a software developer/data scientist)
 
 For advanced users, enter the following in command prompt/terminal (install git/.NETCore SDK first):
+* on windows you will need to add the install location of .NET core to your [path variables](https://www.java.com/en/download/help/path.xml) (usually "C:\Program Files\dotnet\")
 ```sh
 git clone https://github.com/thezaza101/sc_ANN.git
 cd sc_ANN
