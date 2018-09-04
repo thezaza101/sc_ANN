@@ -30,7 +30,7 @@ if you do not want to install git/use command line (you still need to install th
 * Open the .sln file using Visual studio
 * Set "ui" as the startup project 
 
-### Deading data & Running the project
+### Loading data & Running the project
 if you press the 'Run All' button, it should have the same effect as the 'Iris' button on from the tute files.
 
 Note that some of the datasets provided in class may not load into this program without pre-processing as:
