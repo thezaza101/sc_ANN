@@ -35,7 +35,7 @@ if you press the 'Run All' button, it should have the same effect as the 'Iris' 
 
 Note that some of the datasets provided in class may not load into this program without pre-processing as:
 * They are separated by tabs or multiple spaces instead of a single delimiter.
-* They are not pure dataset and contain information in a format that doesn’t fit the other data.
+* They are not a pure dataset and contain information in a format that doesn’t fit the other data in the dataset.
 * These errors can be fixed by opening the file in notepad and doing a find and replace/deleting inconsistent data.
 
 ### Debugging
