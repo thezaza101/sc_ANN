@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using helpers;
-using nn;
+using NeuralNetworks;
 
 namespace cli
 {

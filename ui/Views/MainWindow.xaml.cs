@@ -26,8 +26,7 @@ namespace ui.Views
                 if(e.Key == Key.Enter)
                 {
                     btnCmd.Command.Execute(s);        
-                    e.Handled = true;       
-                    //This causes an error                         
+                    e.Handled = true;                     
                 }
             };
         }

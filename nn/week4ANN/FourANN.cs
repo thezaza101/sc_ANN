@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using helpers;
 
-namespace nn
+namespace NeuralNetworks
 {
     public class W4NeuralNetwork
     {

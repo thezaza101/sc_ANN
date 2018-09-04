@@ -12,6 +12,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media.Imaging;
 using System.Reflection;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace ui.ViewModels
 {
@@ -39,8 +40,14 @@ namespace ui.ViewModels
         public string OutputMatrixVal {get {return _ANN.OutputMatrixVal.ToString(16);}}
         public string GraphData {get {return _ANN.GraphData.ToString(20);}}        
         private Dictionary<string, ANN> _n = new Dictionary<string, ANN>();
-        public string CurrentTab {get;set;} = "0";
+        public string InputFile {get{return _ANN.InputFile;}set{_ANN.InputFile=value;}}
+        public string Delimiter {get {return _ANN.Delimiter.ToString();}set{char val = _ANN.Delimiter; char.TryParse(value.ToCharArray().FirstOrDefault().ToString(), out val); _ANN.Delimiter=val;}}
+        public bool HasHeaders {get{return _ANN.HasHeaders;}set{_ANN.HasHeaders=value;}}
         
+        public string NumTrain {get { return _ANN.NumTrain.ToString();}set{int val=_ANN.NumTrain;int.TryParse(value,out val);_ANN.NumTrain=val;}}
+        public string NumTest {get { return _ANN.NumTest.ToString();}set{int val=_ANN.NumTest;int.TryParse(value,out val);_ANN.NumTest=val;}}
+        public string NumVal {get { return _ANN.NumVal.ToString();}set{int val=_ANN.NumVal; int.TryParse(value,out val);_ANN.NumVal=val;}}
+
         public string RawOutput
         {
             get
@@ -86,7 +93,9 @@ namespace ui.ViewModels
         public void RunCommand(object s = null)
         {
             Log(CurrentCommand);
-            CurrentCommand = "";
+            _currentCommand = "";
+            //if the "OnPropertyChanged" method isnt called then the error doesnt occur.
+            OnPropertyChanged("CurrentCommand");
         }
 
 
@@ -102,6 +111,45 @@ namespace ui.ViewModels
             UpdateAllProperties();
         }
 
+        public void ReadFile()
+        {
+            Log(_ANN.ReadData());
+            UpdateAllProperties();
+        }
+
+        public void SetExemplar()
+        {            
+            Log(_ANN.SetExemplar());
+            UpdateAllProperties();
+        }
+        public void SuffleExemplar()
+        {            
+            Log(_ANN.SuffleExemplar());
+            UpdateAllProperties();
+        }
+
+        public void SetTrain()
+        {            
+            Log(_ANN.SetTrain());
+            UpdateAllProperties();
+        }
+        public void SetTest()
+        {
+            Log(_ANN.SetTest());
+            UpdateAllProperties();
+        }
+
+        public void SetVal()
+        {
+            Log(_ANN.SetVal());
+            UpdateAllProperties();
+        }
+
+        public void RunNetwork()
+        {
+            Log(_ANN.RunNetwork());
+            UpdateAllProperties();
+        }
 
         private void SaveState()
         {
@@ -128,8 +176,16 @@ namespace ui.ViewModels
             UpdateAllProperties();
         }
 
+        public void PickInputFile()
+        {
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                Title = "Select File"
+            };
 
-
+            InputFile = ofd.ShowAsync().Result[0];
+            OnPropertyChanged("InputFile");
+        }
 
         private void Log(string entry)
         {

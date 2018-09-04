@@ -1,6 +1,6 @@
 using System;
 using helpers;
-using nn;
+using NeuralNetworks;
 using PLplot;
 
 namespace ui
@@ -37,6 +37,14 @@ namespace ui
         public int NumberOutputNodes {get;set;} = 3;// from iris data set
         public int NumberOfEpochs {get;set;} = 200; // For tute 3 
         public double LearningRate_eta {get;set;} = 0.1;// learning_rate
+
+        public string InputFile {get;set;} = "iris - Copy.Txt";
+        public char Delimiter {get;set;} = ' ';
+        public bool HasHeaders {get;set;} = false;
+
+        public int NumTrain {get;set;} = 50;
+        public int NumTest {get;set;} = 50;
+        public int NumVal {get;set;} = 50;
 
 
 
@@ -84,19 +92,132 @@ namespace ui
         public string SplitData(string FromData, string ToData, int NumberOfRows)
         {
             throw new NotImplementedException();
+        }   
+        public string ReadData()
+        {
+            string output ="";
+            _rawData = new MatrixData(InputFile, false, true,Delimiter);
+            output += "Read: "+InputFile+Environment.NewLine;
+            output += "Raw data:"+Environment.NewLine;
+            output +=_rawData.Head(5,16);
+            output += Environment.NewLine+Environment.NewLine;
+            return output;
+        }
+        
+        public string SetExemplar()
+        {
+            string output ="";
+            _exemplarData = _rawData.GetExemplar(NumberInputsNodes, NumberOutputNodes, 1);
+            output += "Exemplar data:"+Environment.NewLine;
+            output +=_exemplarData.Head(5,16);
+            output += Environment.NewLine+Environment.NewLine;
+            return output;
+        }
+
+        public string SuffleExemplar()
+        {
+            string output ="";
+            output += "Suffleing data..."+Environment.NewLine;
+            _exemplarData.Suffle();
+            output += Environment.NewLine;
+            return output;
+        }
+
+        public string SetTrain()
+        {
+            string output ="";
+
+            _trainingData = _exemplarData.CopyData(0,0,NumTrain);
+
+            output += "Trainig data:"+Environment.NewLine;
+            output +=_trainingData.Head(5,16);
+            output += Environment.NewLine+Environment.NewLine;
+
+            return output;
+        }
+        public string SetTest()
+        {
+            string output ="";
+            _testingData =_exemplarData.CopyData(NumTrain,0,NumTest);
+            output +="Test data:"+Environment.NewLine;
+            output +=_testingData.Head(5,16);
+            output += Environment.NewLine+Environment.NewLine;
+            return output;
+        }
+        public string SetVal()
+        {
+            string output ="";
+            _validationData = _exemplarData.CopyData(NumTrain+NumTest,0,NumVal);
+            output += "Validation data:"+Environment.NewLine;
+            output +=_validationData.Head(5,16);
+            output += Environment.NewLine+Environment.NewLine;
+            return output;
+        }
+        public string RunNetwork()
+        {
+            string output ="";
+
+            int num_inputs = NumberInputsNodes; // from iris data set
+            int num_hidden = NumberHiddenNodes; // arbitary
+            int num_outputs = NumberOutputNodes;// from iris data set
+            int epochs = NumberOfEpochs; // For tute 3 
+            double eta = LearningRate_eta;// learning_rate
+
+            
+            output += "Initialising Neural Network with:"+Environment.NewLine;
+            output += num_inputs+" inputs, "+num_hidden+" hidden layers, "+num_outputs+" outputs, "+epochs+" epochs, "+eta+" learning eate"+Environment.NewLine;
+
+            Random rnd1 = new Random(102);
+            W4NeuralNetwork nn = new W4NeuralNetwork(num_inputs, num_hidden, num_outputs, rnd1);
+            nn.InitializeWeights(rnd1);
+
+            string dir = "Data\\";
+            nn.train(_trainingData.Data.ToJagged().ToDoubleArray(), _testingData.Data.ToJagged().ToDoubleArray(), epochs, eta, dir+"nnlog.txt");
+            _graphData = nn.GraphData;
+        
+            double trainAcc = nn.Accuracy(_trainingData.Data.ToJagged().ToDoubleArray(),dir+"trainOut.txt");
+            string ConfusionTrain = nn.showConfusion(dir+"trainConfusion.txt");
+            _confusionMatrixTrain = nn.GetConfusionMatrix();
+            _outputMatrixTrain = new MatrixData(dir+"trainOut.txt",false,true,' ');
+
+            double testAcc = nn.Accuracy(_testingData.Data.ToJagged().ToDoubleArray(),dir+"testOut.txt");
+            string ConfusionTest = nn.showConfusion(dir + "testConfusion.txt");
+            _confusionMatrixTest = nn.GetConfusionMatrix();
+            _outputMatrixTest = new MatrixData(dir+"testOut.txt",false,true,' ');
+
+            double valAcc = nn.Accuracy(_validationData.Data.ToJagged().ToDoubleArray(),dir+"valOut.txt");
+            string ConfusionVal = nn.showConfusion(dir + "valConfusion.txt");
+            _confusionMatrixVal = nn.GetConfusionMatrix();
+            _outputMatrixVal = new MatrixData(dir+"valOut.txt",false,true,' ');
+
+
+            trainAcc = trainAcc * 100;
+            testAcc = testAcc * 100;
+            valAcc = valAcc * 100;
+            output += Environment.NewLine;
+
+            output +="Train accuracy = " + trainAcc.ToString("F2")+Environment.NewLine;
+            output +="Test accuracy = " + testAcc.ToString("F2")+Environment.NewLine;
+            output +="Val accuracy = " + valAcc.ToString("F2")+Environment.NewLine;
+            output += Environment.NewLine;
+            output +="Train Confusion matrix \r\n"+ConfusionTrain+Environment.NewLine;
+            output +="Test Confusion matrix \r\n"+ConfusionTest+Environment.NewLine;
+            output +="Val Confusion matrix \r\n"+ConfusionVal+Environment.NewLine;
+            GenerateGraph();
+            return output;
         }
 
         public string Run()
         {
             string output ="";
-            _rawData = new MatrixData("iris - Copy.Txt", false,true,' ');
+            _rawData = new MatrixData(InputFile, false, true,Delimiter);
             //_rawData = new MatrixData("ANN_test.csv", false,true,',');
 
-            _rawData.ChangeHeader(0,"Speal.Length");
-            _rawData.ChangeHeader(1,"Speal.Width");
-            _rawData.ChangeHeader(2,"Petal.Length");
-            _rawData.ChangeHeader(3,"Petal.Width");
-            _rawData.ChangeHeader(4,"Species");
+            //_rawData.ChangeHeader(0,"Speal.Length");
+            //_rawData.ChangeHeader(1,"Speal.Width");
+            //_rawData.ChangeHeader(2,"Petal.Length");
+            //_rawData.ChangeHeader(3,"Petal.Width");
+            //_rawData.ChangeHeader(4,"Species");
 
             output += "Raw data:"+Environment.NewLine;
             output +=_rawData.Head(5,16);
@@ -112,7 +233,7 @@ namespace ui
             output +=_rawData.Head(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
-            _exemplarData = _rawData.GetExemplar(4, 3, 1);
+            _exemplarData = _rawData.GetExemplar(NumberInputsNodes, NumberOutputNodes, 1);
             //_exemplarData = _rawData.GetExemplar(4, 2, 1);
             //var _tempExemplarData = new MatrixData()
             output += "Exemplar data:"+Environment.NewLine;
@@ -124,20 +245,20 @@ namespace ui
             output += Environment.NewLine;
 
             output += "Setting trainig data as first 50 rows of suffled exemplar data..."+Environment.NewLine;
-            _trainingData = _exemplarData.CopyData(0,0,50);
+            _trainingData = _exemplarData.CopyData(0,0,NumTrain);
             output += "Trainig data:"+Environment.NewLine;
             output +=_trainingData.Head(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
             output += "Setting test data as next 50 rows of suffled exemplar data..."+Environment.NewLine;
-            _testingData =_exemplarData.CopyData(50,0,50);
+            _testingData =_exemplarData.CopyData(NumTrain,0,NumTest);
             output +="Test data:"+Environment.NewLine;
             output +=_testingData.Head(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
 
             output += "Setting validation data as next 50 rows of suffled exemplar data..."+Environment.NewLine;
-            _validationData = _exemplarData.CopyData(100,0,50);
+            _validationData = _exemplarData.CopyData(NumTrain+NumTest,0,NumVal);
             output += "Validation data:"+Environment.NewLine;
             output +=_validationData.Head(5,16);
             output += Environment.NewLine+Environment.NewLine;
@@ -200,10 +321,10 @@ namespace ui
             double[] y1 = _graphData.GetColumnCopy<double>(2);
             
             double xMax = _graphData.Max(0);
-            double yMax = _graphData.Max(1);
-            yMax = (_graphData.Max(2) > yMax)? _graphData.Max(2) : yMax;
-            double yMin = _graphData.Min(1);
-            yMin = (_graphData.Min(2) < yMin)? _graphData.Min(2): yMin;
+            //double yMax = _graphData.Max(1);
+            //yMax = (_graphData.Max(2) > yMax)? _graphData.Max(2) : yMax;
+            //double yMin = _graphData.Min(1);
+            //yMin = (_graphData.Min(2) < yMin)? _graphData.Min(2): yMin;
 
             var plot = new PLStream();
             plot.width(1);
@@ -212,7 +333,7 @@ namespace ui
             plot.scolbg(255,255,255);
             plot.init();
             
-            plot.env(0,xMax,0,yMax+5,AxesScale.Independent,AxisBox.BoxTicksLabelsAxes);
+            plot.env(0,xMax,0,105,AxesScale.Independent,AxisBox.BoxTicksLabelsAxes);
 
             //####### PLPlot colour guide:
             //0	black (default background)

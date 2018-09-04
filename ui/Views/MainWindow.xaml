@@ -22,6 +22,48 @@
 							<TextBox Text="{Binding CurrentCommand}" Name="tbCurrentCommand" AcceptsReturn="False" TextWrapping="Wrap" Width="225" />
 							<Button Command="{Binding RunCommand}" Name="btnRunCommand" Content="Run" Width="75"/>
 						</StackPanel>
+						<TextBlock Text=" " Classes="h2" />	
+						<TextBlock Text="Input file parsing" Classes="h2" />	
+						<StackPanel Orientation="Horizontal"> 
+							<TextBox Text="{Binding InputFile}" AcceptsReturn="False" TextWrapping="Wrap" Width="275" />
+							<Button Command="{Binding PickInputFile}" Content="..." Width="25"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal"> 
+							<TextBlock Text="Delimiter:" Width="100"/>
+							<TextBox Text="{Binding Delimiter, Mode=TwoWay}" Width="200"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal"> 
+							<TextBlock Text="Has headers:" Width="100"/>
+							<CheckBox IsChecked="{Binding HasHeaders}" Width="50"/>
+							<Button Command="{Binding ReadFile}" Content="Read File" Width="150"/>
+						</StackPanel>
+						<Button Command="{Binding SetExemplar}" Content="Set Exemplar" Width="300"/>
+						<Button Command="{Binding SuffleExemplar}" Content="Suffle Exemplar" Width="300"/>
+
+
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="# Train:" Width="100"/>
+							<TextBox Text="{Binding NumTrain, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="100" />
+							<Button Command="{Binding SetTrain}" Content="Set" Width="100"/>
+						</StackPanel>
+
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="# Test" Width="100"/>
+							<TextBox Text="{Binding NumTest, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="100" />
+							<Button Command="{Binding SetTest}" Content="Set" Width="100"/>
+						</StackPanel>
+
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="# Validation:" Width="100"/>
+							<TextBox Text="{Binding NumVal, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="100" />
+							<Button Command="{Binding SetVal}" Content="Set" Width="100"/>
+						</StackPanel>
+
+
+
+
+						<TextBlock Text=" " Classes="h2" />	
+						<TextBlock Text="Neural Network inputs" Classes="h2" />						
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Text="Input Nodes:" Width="100"/>
 							<TextBox Text="{Binding NumberInputsNodes, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="200" />
@@ -42,7 +84,11 @@
 							<TextBlock Text="Learning Rate:" Width="100"/>
 							<TextBox Text="{Binding LearningRate_eta, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="200" />
 						</StackPanel>
+						<Button Command="{Binding RunNetwork}" Content="Run Network" Width="300"/>
+
 					</StackPanel>
+					<TextBlock Text=" " Classes="h2" />	
+					<TextBlock Text="Commands:" Classes="h2" />	
 					<StackPanel Orientation="Horizontal"> 
 						<Button Command="{Binding RunAll}" Content="Run All" Width="75"/>
 						<Button Command="{Binding ShowPlot}" Content="Show Plot" Width="75"/>
@@ -51,6 +97,14 @@
 					</StackPanel>
 					<StackPanel Orientation="Horizontal"> 
 						<Button Command="{Binding RunAll}" Content="Clear" Width="75"/>
+						<Button Content="..." Width="75"/>
+						<Button Content="..." Width="75"/>
+						<Button Content="..." Width="75"/>
+					</StackPanel>
+					<TextBlock Text=" " Classes="h2" />	
+					<TextBlock Text="Preconfigured ANNs:" Classes="h2" />	
+					<StackPanel Orientation="Horizontal"> 
+						<Button Content="Iris" Width="75"/>
 						<Button Content="..." Width="75"/>
 						<Button Content="..." Width="75"/>
 						<Button Content="..." Width="75"/>
