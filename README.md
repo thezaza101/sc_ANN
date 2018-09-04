@@ -5,9 +5,11 @@ Please note that the ANN code is from the Neural Network Demo with C# by James M
 The Code was modified by Mr Robert Cox from the University of Canberra and myself 
 
 ## How can this project help you
-Make changes to your ANN inputs without changing code, this will save a lot of time and effort.
+* Make changes to your ANN inputs without changing code, this will save a lot of time and effort
+* Allows you to keep old graphs open in browser tabs
+* Allows you to run the process in parts and explore the data to better understand what’s going on. 
 
-### to do list
+### To do list
 * Make loading/working with large datasets more efficient
 * All non-UI code to be run on a background thread to ensure the UI is not locked while processing
 * Progress bar
