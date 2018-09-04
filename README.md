@@ -19,7 +19,7 @@ I have not included the data files with this project apart from iris. You should
 
 ## How to get this up and running
 
-Download the .NET Core SDK from https://www.microsoft.com/net/download (this project is created for version 2.1)
+Download the .NET Core SDK from https://www.microsoft.com/net/download (this project is created for version 2.0/2.1)
 
 Install git from https://git-scm.com/ (This is optional however highly recommended, very much worthwhile learning if you intend on becoming a software developer/data scientist)
 
