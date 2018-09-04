@@ -30,12 +30,14 @@
 						</StackPanel>
 						<StackPanel Orientation="Horizontal"> 
 							<TextBlock Text="Delimiter:" Width="100"/>
-							<TextBox Text="{Binding Delimiter, Mode=TwoWay}" Width="200"/>
-						</StackPanel>
-						<StackPanel Orientation="Horizontal"> 
-							<TextBlock Text="Has headers:" Width="100"/>
+							<TextBox Text="{Binding Delimiter, Mode=TwoWay}" Width="50"/>
+							<TextBlock Text="    Has headers:" Width="100"/>
 							<CheckBox IsChecked="{Binding HasHeaders}" Width="50"/>
-							<Button Command="{Binding ReadFile}" Content="Read File" Width="150"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal"> 							
+							<Button Command="{Binding ReadFile}" Content="Read File" Width="100"/>
+							<TextBox Text="{Binding ColToNormalize, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="100" />
+							<Button Command="{Binding NormalizeData}" Content="Normalize column" Width="100"/>
 						</StackPanel>
 						<Button Command="{Binding SetExemplar}" Content="Set Exemplar" Width="300"/>
 						<Button Command="{Binding SuffleExemplar}" Content="Suffle Exemplar" Width="300"/>

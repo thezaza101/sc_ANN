@@ -38,7 +38,7 @@ namespace ui
         public int NumberOfEpochs {get;set;} = 200; // For tute 3 
         public double LearningRate_eta {get;set;} = 0.1;// learning_rate
 
-        public string InputFile {get;set;} = "iris - Copy.Txt";
+        public string InputFile {get;set;} = "iris";
         public char Delimiter {get;set;} = ' ';
         public bool HasHeaders {get;set;} = false;
 
@@ -76,7 +76,10 @@ namespace ui
 
         public string NormalizeData(int col, string method = "StandardScore")
         {
-            throw new NotImplementedException();
+            string output ="";
+            output += "Normalizeing column "+col.ToString()+" using " +method+" method."+Environment.NewLine;
+            _rawData.Normalize(col);
+            return output;
         }
 
         public string MakeExemplarData(int col =4, int classes = 3, int startAt = 1)

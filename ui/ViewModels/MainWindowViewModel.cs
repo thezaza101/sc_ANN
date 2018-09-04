@@ -44,6 +44,8 @@ namespace ui.ViewModels
         public string Delimiter {get {return _ANN.Delimiter.ToString();}set{char val = _ANN.Delimiter; char.TryParse(value.ToCharArray().FirstOrDefault().ToString(), out val); _ANN.Delimiter=val;}}
         public bool HasHeaders {get{return _ANN.HasHeaders;}set{_ANN.HasHeaders=value;}}
         
+        public string ColToNormalize{get{return _colToNormalize.ToString();}set{int val=_colToNormalize;int.TryParse(value,out val);_colToNormalize=val;}}
+        private int _colToNormalize = 0;
         public string NumTrain {get { return _ANN.NumTrain.ToString();}set{int val=_ANN.NumTrain;int.TryParse(value,out val);_ANN.NumTrain=val;}}
         public string NumTest {get { return _ANN.NumTest.ToString();}set{int val=_ANN.NumTest;int.TryParse(value,out val);_ANN.NumTest=val;}}
         public string NumVal {get { return _ANN.NumVal.ToString();}set{int val=_ANN.NumVal; int.TryParse(value,out val);_ANN.NumVal=val;}}
@@ -115,6 +117,13 @@ namespace ui.ViewModels
         {
             Log(_ANN.ReadData());
             UpdateAllProperties();
+        }
+
+        public void NormalizeData()
+        {
+            Log(_ANN.NormalizeData(_colToNormalize));
+            OnPropertyChanged("RawData");
+            
         }
 
         public void SetExemplar()
