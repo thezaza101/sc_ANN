@@ -4,6 +4,14 @@ Please note that the ANN code is from the Neural Network Demo with C# by James M
 
 The Code was modified by Mr Robert Cox from the University of Canberra and myself 
 
+## How can this project help you
+Make changes to your ANN inputs without changing code, this will save a lot of time and effort.
+
+### to do list
+* Make loading/working with large datasets more efficient
+* All non-UI code to be run on a background thread to ensure the UI is not locked while processing
+* Progress bar
+
 ## Data to run this project
 I have not included the data files with this project apart from iris. You should be able to get the data files from the course site. 
 
