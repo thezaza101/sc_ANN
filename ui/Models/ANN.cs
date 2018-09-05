@@ -99,7 +99,7 @@ namespace ui
         public string ReadData()
         {
             string output ="";
-            _rawData = new MatrixData(InputFile, false, true,Delimiter);
+            _rawData = new MatrixData(InputFile, HasHeaders, true,Delimiter);
             output += "Read: "+InputFile+Environment.NewLine;
             output += "Raw data:"+Environment.NewLine;
             output +=_rawData.Head(5,16);

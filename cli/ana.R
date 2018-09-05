@@ -13,8 +13,14 @@ data <- data %>%
   mutate(sz=replace(sz, sz>=qt[5], 6)) 
   
 
-p <- plot_ly(data, x = ~Epochs, y = ~HiddenLayers, z = ~eta, color =~MeanTrainNorm, size=~sz) %>%
+p <- plot_ly(data, x = ~Epochs, y = ~HiddenLayers, z = ~eta, color =~MeanTrainNorm, size=50) %>%
   add_markers() %>%
   layout(scene = list(xaxis = list(title = 'Epochs'),
                       yaxis = list(title = 'HiddenLayers'),
                       zaxis = list(title = 'eta')))
+
+#p <- plot_ly(data, x = ~Epochs, y = ~HiddenLayers, z = ~eta, color =~MeanTrainNorm, size=~sz) %>%
+#  add_markers() %>%
+#  layout(scene = list(xaxis = list(title = 'Epochs'),
+#                      yaxis = list(title = 'HiddenLayers'),
+#                      zaxis = list(title = 'eta')))

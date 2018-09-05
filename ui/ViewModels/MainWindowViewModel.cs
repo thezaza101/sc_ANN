@@ -116,8 +116,14 @@ namespace ui.ViewModels
 
         public void RunAll()
         {
-            Log(_ANN.Run());
-            UpdateAllProperties();
+            ReadFile();
+            NormalizeData();
+            SetExemplar();
+            SuffleExemplar();
+            SetTrain();
+            SetTest();
+            SetVal();
+            RunNetwork();
         }
 
         public void RunIris()
