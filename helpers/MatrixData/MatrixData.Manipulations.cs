@@ -47,6 +47,41 @@ namespace helpers
             _data = newData;
             NumberOfRows++;   
         }
+        public void AddColumn(dynamic[] newCol = null,string headerName = "")
+        {
+            if (newCol.Length > NumberOfRows)
+            {
+                throw new Exception("Number of rows in the new column ("+newCol.Length+") must be less than or equal to the number of rows in the dataset{"+NumberOfRows+")");                
+            }
+            dynamic[] dataToAdd = new dynamic[NumberOfRows];
+            for(int r = 0; r<newCol.Length; r++)
+            {
+                dataToAdd[r] = newCol[r];
+            }
+            dynamic[,] newData = new dynamic[NumberOfRows,NumberOfColumns+1];
+            string[] newHeaders = new string[NumberOfColumns+1];
+            for (int row = 0; row < NumberOfRows; row++)
+            {
+                for (int col = 0; col <NumberOfColumns; col++)
+                {
+                    newData[row,col] = _data[row,col];
+                }
+            }
+
+            for (int col = 0; col < NumberOfColumns; col++)
+            {
+                newHeaders[col] = _headers[col];
+            }
+            newHeaders[NumberOfColumns] = (string.IsNullOrWhiteSpace(headerName))? NumberOfColumns.ToString() : headerName;
+
+            for (int row = 0; row < NumberOfRows; row++)
+            {
+                newData[row,NumberOfColumns] = dataToAdd[row];
+            }
+            _data = newData;
+            _headers = newHeaders;
+            NumberOfColumns++;
+        }
         public void ChangeRow(int row, dynamic[] newRow)
         {
             if (newRow.Length != NumberOfColumns)

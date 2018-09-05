@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.ComponentModel;
 using System.Collections.Generic;
 
@@ -12,57 +13,50 @@ namespace helpers
             //https://docs.microsoft.com/en-us/azure/machine-learning/studio-module-reference/normalize-data
             //https://en.wikipedia.org/wiki/Normalization_(statistics)
             //https://en.wikipedia.org/wiki/Feature_scaling
-            if(IsValueNumaric(col))
+            switch (method)
             {
-                switch (method)
-                {
-                    case NormalizationMethod.StandardScore:
-                        PreformStandardScoreNormalization(col);
-                        break;
-                    case NormalizationMethod.FeatureScalingStandardization:
-                        PreformStandardization(col);
-                        break;
-                    case NormalizationMethod.FeatureScalingMinMax:
-                        PreformMinMaxNormalization(col);
-                        break;
-                    case NormalizationMethod.FeatureScalingMean:
-                        PreformMeanNormalization(col);
-                        break;  
-                    default:
-                        throw new Exception("How did you even get here? Please let the monkey that"+
-                        "coded this know the following: \"MatrixData<T>.Normalize.default\", along with"+
-                        "what you did to cause this error");
-                }                
-            }
-            else 
-            {
-                throw new InvalidOperationException("Cannot preform normalization on non-numaric column");
+                case NormalizationMethod.StandardScore:
+                    PreformStandardScoreNormalization(col);
+                    break;
+                case NormalizationMethod.FeatureScalingStandardization:
+                    PreformStandardization(col);
+                    break;
+                case NormalizationMethod.FeatureScalingMinMax:
+                    PreformMinMaxNormalization(col);
+                    break;
+                case NormalizationMethod.FeatureScalingMean:
+                    PreformMeanNormalization(col);
+                    break;
+                default:
+                    throw new Exception("How did you even get here? Please let the monkey that" +
+                    "coded this know the following: \"MatrixData<T>.Normalize.default\", along with" +
+                    "what you did to cause this error");
             }
         }
         public void NormalizeAll(NormalizationMethod method = NormalizationMethod.StandardScore)
         {
-            for (int col = 0; col<NumberOfColumns;col++)
+            for (int col = 0; col < NumberOfColumns; col++)
             {
-                if(IsValueNumaric(col))
+                if (IsValueNumaric(col))
                 {
-                    Normalize(col,method);
+                    Normalize(col, method);
                 }
             }
         }
-        
+
         private void PreformStandardScoreNormalization(int col)
         {
             //https://en.wikipedia.org/wiki/Standard_score
             double min = Min(col);
             double max = Max(col);
-            
+
             double mult = 1 / (max - min);
-            
+
             for (int row = 0; row < NumberOfRows; row++)
             {
-                double currentVal = _data[row,col];
+                double currentVal = _data[row, col];
                 currentVal = (currentVal - min) * mult;
-                _data[row,col] = ConvertToNumeric(currentVal.ToString());
+                _data[row, col] = ConvertToNumeric(currentVal.ToString());
             }
         }
 
@@ -73,9 +67,9 @@ namespace helpers
             double max = Max(col);
             for (int row = 0; row < NumberOfRows; row++)
             {
-                double currentVal = _data[row,col];
+                double currentVal = _data[row, col];
                 currentVal = (currentVal - min) / (max - min);
-                _data[row,col] = ConvertToNumeric(currentVal.ToString());
+                _data[row, col] = ConvertToNumeric(currentVal.ToString());
             }
         }
 
@@ -88,9 +82,9 @@ namespace helpers
 
             for (int row = 0; row < NumberOfRows; row++)
             {
-                double currentVal = _data[row,col];
+                double currentVal = _data[row, col];
                 currentVal = (currentVal - mean) / (max - min);
-                _data[row,col] = ConvertToNumeric(currentVal.ToString());
+                _data[row, col] = ConvertToNumeric(currentVal.ToString());
             }
         }
 
@@ -103,46 +97,45 @@ namespace helpers
         //Finds the minimum value for the given column
         public double Min(int col)
         {
-            double min = _data[0,col];            
-            //find the minimum value in the column
-            for (int row = 1; row < NumberOfRows; row++)
-            {
-                double currentVal = _data[row,col];
-                min = (currentVal < min)? currentVal : min;
-            }
-            return min;
+            return GetColumnCopy<double>(col).Min();
         }
 
         //Finds the maximum value for the given column
         public double Max(int col)
         {
-            double max = _data[0,col];           
-            //find the maximum value in the column
-            for (int row = 1; row < NumberOfRows; row++)
-            {
-                double currentVal = _data[row,col];
-                max = (currentVal > max)? currentVal : max;
-            }
-            return max;
+            return GetColumnCopy<double>(col).Max();
         }
 
         //Find the Mean (average) value for the given column
         public double Mean(int col)
         {
-            return Sum(col) / NumberOfRows;
+            return GetColumnCopy<double>(col).Average();
+        }
+
+        //find the Mode of a column
+        public double Mode(int col)
+        {
+            return GetColumnCopy<double>(col)
+                .GroupBy(v => v)
+                .OrderByDescending(g => g.Count())
+                .First()
+                .Key;
+        }
+
+        //Find the Median of a column 
+        public double Median(int col)
+        {
+            double[] column = GetColumnCopy<double>(col)
+                .OrderByDescending(g => g).ToArray();
+            int mid = NumberOfRows / 2;
+            return (NumberOfRows % 2 != 0) ? (double)column[mid] : ((double)column[mid] + (double)column[mid - 1]) / 2;
+
         }
 
         //Find the sum of a column
-        public double Sum (int col)
+        public double Sum(int col)
         {
-            double sum = 0;
-            for (int row = 0; row < NumberOfRows; row++)
-            {
-                sum+= _data[row,col];
-            }
-            return sum;
+            return GetColumnCopy<double>(col).Sum();
         }
-
-        
     }
 }

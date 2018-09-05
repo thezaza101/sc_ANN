@@ -98,7 +98,7 @@
 						<Button Command="{Binding LoadState}" Content="Load State" Width="75"/>
 					</StackPanel>
 					<StackPanel Orientation="Horizontal"> 
-						<Button Command="{Binding RunAll}" Content="Clear" Width="75"/>
+						<Button Command="{Binding ClearRawData}" Content="Clear" Width="75"/>
 						<Button Content="..." Width="75"/>
 						<Button Content="..." Width="75"/>
 						<Button Content="..." Width="75"/>
@@ -106,7 +106,7 @@
 					<TextBlock Text=" " Classes="h2" />	
 					<TextBlock Text="Preconfigured ANNs:" Classes="h2" />	
 					<StackPanel Orientation="Horizontal"> 
-						<Button Content="Iris" Width="75"/>
+						<Button Command="{Binding RunIris}" Content="Iris" Width="75"/>
 						<Button Content="..." Width="75"/>
 						<Button Content="..." Width="75"/>
 						<Button Content="..." Width="75"/>

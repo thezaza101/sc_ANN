@@ -3,6 +3,16 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# History files
+.Rhistory
+.Rapp.history
+
+# Session Data files
+.RData
+
+# Example code in package build process
+*-Ex.R
+
 # User-specific files
 *.suo
 *.user
@@ -31,7 +41,8 @@ bld/
 .vscode/ 
 
 # Data files
-*[Dd]ata\
+Data/
+
 
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
@@ -335,3 +346,4 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+.Rproj.user

@@ -39,7 +39,6 @@ namespace ui.ViewModels
         public string OutputMatrixTest {get {return _ANN.OutputMatrixTest.ToString(16);}}
         public string OutputMatrixVal {get {return _ANN.OutputMatrixVal.ToString(16);}}
         public string GraphData {get {return _ANN.GraphData.ToString(20);}}        
-        private Dictionary<string, ANN> _n = new Dictionary<string, ANN>();
         public string InputFile {get{return _ANN.InputFile;}set{_ANN.InputFile=value;}}
         public string Delimiter {get {return _ANN.Delimiter.ToString();}set{char val = _ANN.Delimiter; char.TryParse(value.ToCharArray().FirstOrDefault().ToString(), out val); _ANN.Delimiter=val;}}
         public bool HasHeaders {get{return _ANN.HasHeaders;}set{_ANN.HasHeaders=value;}}
@@ -96,10 +95,15 @@ namespace ui.ViewModels
         {
             Log(CurrentCommand);
             _currentCommand = "";
-            //if the "OnPropertyChanged" method isnt called then the error doesnt occur.
             OnPropertyChanged("CurrentCommand");
         }
+        
+        public void ClearRawData()
+        {
+            _rawOutput = "";
+            OnPropertyChanged("RawOutput");
 
+        }
 
         public void ShowPlot()
         {
@@ -113,15 +117,23 @@ namespace ui.ViewModels
             UpdateAllProperties();
         }
 
+        public void RunIris()
+        {
+            Log(_ANN.RunIris());
+            UpdateAllProperties();
+        }
+
         public void ReadFile()
         {
             Log(_ANN.ReadData());
-            UpdateAllProperties();
+            OnPropertyChanged("RawOutput");
+            OnPropertyChanged("RawData");
         }
 
         public void NormalizeData()
         {
             Log(_ANN.NormalizeData(_colToNormalize));
+            OnPropertyChanged("RawOutput");
             OnPropertyChanged("RawData");
             
         }
@@ -130,34 +142,54 @@ namespace ui.ViewModels
         {            
             Log(_ANN.SetExemplar());
             UpdateAllProperties();
+            OnPropertyChanged("RawOutput");
+            OnPropertyChanged("ExemplarData");
+            
         }
         public void SuffleExemplar()
         {            
             Log(_ANN.SuffleExemplar());
             UpdateAllProperties();
+            OnPropertyChanged("RawOutput");
+            OnPropertyChanged("ExemplarData");
         }
 
         public void SetTrain()
         {            
             Log(_ANN.SetTrain());
             UpdateAllProperties();
+             OnPropertyChanged("RawOutput");
+            OnPropertyChanged("TrainingData");
         }
         public void SetTest()
         {
             Log(_ANN.SetTest());
             UpdateAllProperties();
+             OnPropertyChanged("RawOutput");
+            OnPropertyChanged("TestingData");
         }
 
         public void SetVal()
         {
             Log(_ANN.SetVal());
             UpdateAllProperties();
+             OnPropertyChanged("RawOutput");
+            OnPropertyChanged("ValidationData");
         }
 
         public void RunNetwork()
         {
             Log(_ANN.RunNetwork());
-            UpdateAllProperties();
+            OnPropertyChanged("RawOutput");
+            OnPropertyChanged("ConfusionMatrixTrain");
+            OnPropertyChanged("ConfusionMatrixTest");
+            OnPropertyChanged("ConfusionMatrixVal");
+            OnPropertyChanged("OutputMatrixTrain");
+            OnPropertyChanged("OutputMatrixTest");
+            OnPropertyChanged("OutputMatrixVal");
+            OnPropertyChanged("GraphData");
+
+
         }
 
         private void SaveState()
@@ -170,6 +202,8 @@ namespace ui.ViewModels
 
         private void LoadState()
         {
+            //This does not work yet
+
             OpenFileDialog ofd = new OpenFileDialog()
             {
                 Title = "Open file"

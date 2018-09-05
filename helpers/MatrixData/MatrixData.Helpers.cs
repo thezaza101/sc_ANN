@@ -9,6 +9,7 @@ namespace helpers
         public bool LabeledRows {get;set;} = false;
         public string Head(int numberOfRows = 5, int colWidth = 10, bool? printRowLabels = null)
         {
+            //TODO: Head function should return new MatrixData with the top n rows. This functionality should be in the ToString method.
             string output ="";
             bool printRowLabs = (printRowLabels == null)? false : true;
             printRowLabs = (printRowLabs|LabeledRows)? true:false;

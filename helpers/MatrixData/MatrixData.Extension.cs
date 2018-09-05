@@ -4,53 +4,6 @@ namespace helpers
 {
     public static class MatrixDataExtension
     {
-        public static dynamic Add(this object o, dynamic valueToAdd)
-        {
-            if (o.IsValueNumaric())
-            {
-                return (double)o + valueToAdd;
-            }
-            else
-            {
-                return o.ToString()+valueToAdd.ToString();
-            }
-        }
-        public static object Subtract(this object o, dynamic valueToSubrtact)
-        {
-            if (o.IsValueNumaric())
-            {
-                return (double)o - valueToSubrtact;
-            }
-            else
-            {
-                throw new InvalidOperationException("Cannot add non numaric types");
-            }
-        }
-        public static object DevideBy(this object o, dynamic valueToDevideBy)
-        {
-            if (o.IsValueNumaric())
-            {
-                return (double)o / valueToDevideBy;
-            }
-            else
-            {
-                throw new InvalidOperationException("Cannot devide by non numaric types");
-            }
-        }
-        public static object MultiplyBy(this object o, dynamic valueToDevideBy)
-        {
-            if (o.IsValueNumaric())
-            {
-                return (double)o * valueToDevideBy;
-            }
-            else
-            {
-                throw new InvalidOperationException("Cannot multiply by non numaric types");
-            }
-        }
-
-        
-
         public static bool IsValueNumaric(this object o)
         {
             double d;
