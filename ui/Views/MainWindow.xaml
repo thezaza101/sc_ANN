@@ -36,7 +36,9 @@
 						</StackPanel>
 						<StackPanel Orientation="Horizontal"> 							
 							<Button Command="{Binding ReadFile}" Content="Read File" Width="100"/>
-							<TextBox Text="{Binding ColToNormalize, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="100" />
+							<TextBox Text="{Binding ColToNormalizeFrom, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="40" />
+							<TextBlock Text=" : " Width="20"/>
+							<TextBox Text="{Binding ColToNormalizeTo, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="40" />
 							<Button Command="{Binding NormalizeData}" Content="Normalize column" Width="100"/>
 						</StackPanel>
 						<Button Command="{Binding SetExemplar}" Content="Set Exemplar" Width="300"/>

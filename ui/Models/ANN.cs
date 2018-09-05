@@ -372,11 +372,11 @@ namespace ui
             output += Environment.NewLine+Environment.NewLine;
 
 
-            int num_inputs = NumberInputsNodes; // from iris data set
-            int num_hidden = NumberHiddenNodes; // arbitary
-            int num_outputs = NumberOutputNodes;// from iris data set
-            int epochs = NumberOfEpochs; // For tute 3 
-            double eta = LearningRate_eta;// learning_rate
+            int num_inputs = 4; // from iris data set
+            int num_hidden = 1; // arbitary
+            int num_outputs = 3;// from iris data set
+            int epochs = 200; // For tute 3 
+            double eta = 0.1;// learning_rate
 
             
             output += "Initialising Neural Network with:"+Environment.NewLine;
