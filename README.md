@@ -50,7 +50,7 @@ Note that some of the datasets provided in class may not load into this program 
 
 ### Debugging
 * You have access to all the code as such debuging is the same as any other c# project
-* This project runs on **.NET Core instead of .NET Framework**, as such a lot of the 'windows only' functionality of c# is gone, i.e. System.Windows.Forms (Win32 GUI aka Windows Forms). However, it has the added benefit of being able to run on Linux and OSX, being more efficient and executing faster, and being open source.
+* This project runs on **.NET Core instead of .NET Framework**, as such a lot of the 'windows only' functionality of c# is gone, i.e. System.Windows.Forms (Win32 GUI aka Windows Forms). However, it has the added benefit of being able to run on Linux and OSX, being more efficient, executing faster, and being open source.
 * This application follows the [Model–View–ViewModel (MVVM)](https://www.wintellect.com/model-view-viewmodel-mvvm-explained/) pattern for its UI, this is why it may seem like there is a lot of 'unnecessary' code.
 * The XAML used in the UI is not the same as the XAML for WPF applications (but they are similar), Check out https://github.com/AvaloniaUI/Avalonia
 * This code was not written by the lecturer, if something goes wrong don’t annoy them.
