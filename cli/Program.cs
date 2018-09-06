@@ -18,26 +18,29 @@ namespace cli
 
         static void Main(string[] args)
         {
-            
-            RunIris();
-            //RunAbalone();
+            Run("Data\\","Iris",4,3,' ',50,50,50,true,0,3,100,300,100,1,10,1,0.01,0.1,0.01);
+            //Run("Data\\","cancer.txt",9,2,',',227,227,227,true,0,8,100,3000,100,1,16,1,0.01,0.1,0.01);
+            //Run("Data\\","abalone.txt",8,3,',',1392,1392,1392,true,0,7,100,3000,100,1,16,1,0.01,0.1,0.01);
         }
-        static void RunIris()
+
+        static void Run(string dir, string file, int inputs,
+        int outputs,char dlim, int trainSplit, int testSplit, int valSplit,
+        bool norm, int normStart, int normEnd, int MinEp, int MaxEp,int StepEp,
+        int MinHid, int MaxHid,int StepHid,double MinEta, double MaxEta,double StepEta)
         {
-            PrepareFile("Iris",4,3,' ',50,50,50,true,0,3);
+            PrepareFile(dir+file,inputs,outputs,dlim,trainSplit,testSplit,valSplit,norm,normStart,normEnd);
 
-            int MaxEpochs = 3000;
-            int MaxHidden = 16;
-            double MaxLearnRate = 0.1;
+            int MaxEpochs = MaxEp;
+            int MaxHidden = MaxHid;
+            double MaxLearnRate = MaxEta;
 
-            int MinEpochs = 200;
-            int MinHidden = 1;
-            double MinLearnRate = 0.01;
+            int MinEpochs = MinEp;
+            int MinHidden = MinHid;
+            double MinLearnRate = MinEta;
 
-            int StepEpochs = 100;
-            int StepHidden = 1;
-            double StepLearnRate = 0.01;
-
+            int StepEpochs = StepEp;
+            int StepHidden = StepHid;
+            double StepLearnRate = StepEta;
 
             int epx = ((MaxEpochs-MinEpochs)/StepEpochs)+1;
             int hidx = ((MaxHidden-MinHidden)/StepHidden)+1;
@@ -45,94 +48,36 @@ namespace cli
 
             int rows = int.Parse((epx * hidx * lrx).ToString());
 
-            MatrixData output = new MatrixData(rows,11);
-            output.ChangeHeader(0,"Epochs");
-            output.ChangeHeader(1,"HiddenLayers");
-            output.ChangeHeader(2,"eta");
-            output.ChangeHeader(3,"MaxTrain");
-            output.ChangeHeader(4,"MaxTest");
-            output.ChangeHeader(5,"MeanTrain");
-            output.ChangeHeader(6,"MeanTest");
-            output.ChangeHeader(7,"ModeTrain");
-            output.ChangeHeader(8,"ModeTest");
-            output.ChangeHeader(9,"MeanTrain");
-            output.ChangeHeader(10,"MedianTest");
-
             Random rnd1 = new Random(102);
             int rowNum = 0;
-
+            List<double[]> outputList = new List<double[]>();
             Parallel.ForEach(SteppedIntegerList(MinEpochs, MaxEpochs, StepEpochs), ep => { 
                 for (int hid = MinHidden; hid<MaxHidden; hid+=StepHidden)
                 {
                     for (double eta = MinLearnRate; eta<MaxLearnRate; eta+=StepLearnRate)
                     {
-                        MatrixData runResults = RunNetwork(4,hid,3,ep,eta,rnd1);
-                        output[rowNum,0] = ep;
-                        output[rowNum,1] = hid;
-                        output[rowNum,2] = eta;
-                        output[rowNum,3] = runResults.Max(1);
-                        output[rowNum,4] = runResults.Max(2);
-                        output[rowNum,5] = runResults.Mean(1);
-                        output[rowNum,6] = runResults.Mean(2);
-                        output[rowNum,7] = runResults.Mode(1);
-                        output[rowNum,8] = runResults.Mode(2);
-                        output[rowNum,9] = runResults.Median(1);
-                        output[rowNum,10] = runResults.Median(2);
+                        MatrixData runResults = RunNetwork(inputs,hid,outputs,ep,eta,rnd1);
+                        double[] d = new double[11];
+                        d[0] = ep;
+                        d[1] = hid;
+                        d[2] = eta;
+                        d[3] = runResults.Max(1);;
+                        d[4] = runResults.Max(2);;
+                        d[5] = runResults.Mean(1);;
+                        d[6] = runResults.Mean(2);;
+                        d[7] = runResults.Mode(1);;
+                        d[8] = runResults.Mode(1);;
+                        d[9] = runResults.Median(1);;
+                        d[10] = runResults.Median(2);;
+                        outputList.Add(d);
                         System.Console.WriteLine(DateTime.Now.ToString() +" ("+ rowNum.ToString()+"/"+rows.ToString()+"): "+ep.ToString()+","+hid.ToString()+","+eta.ToString());
                         rowNum++;
                     }
                 }} );
              
-            output.TopSplit(0,rowNum);
-
-            MatrixData m = new MatrixData("abaloneOut.csv",true,true,',');
-            MatrixData mCopy = new MatrixData(output,0,0);
-            mCopy.Normalize(3);
-            mCopy.Normalize(4);
-            mCopy.Normalize(5);
-            mCopy.Normalize(6);
-            mCopy.Normalize(7);
-            mCopy.Normalize(8);
-            mCopy.Normalize(9);
-            mCopy.Normalize(10);
-
-            output.AddColumn(mCopy.Columns(3),"MaxTrainNorm");
-            output.AddColumn(mCopy.Columns(4),"MaxTestNorm");
-            output.AddColumn(mCopy.Columns(5),"MeanTrainNorm");
-            output.AddColumn(mCopy.Columns(6),"MeanTestNorm");
-
-            output.AddColumn(mCopy.Columns(7),"ModeTrainNorm");
-            output.AddColumn(mCopy.Columns(8),"ModeTestNorm");
-            output.AddColumn(mCopy.Columns(9),"MedianTrainNorm");
-            output.AddColumn(mCopy.Columns(10),"MedianTestNorm");
-
-            //output.NormalizeAll();
-            output.WriteCSV("IrisOut.csv");
-        }
-        static void RunAbalone()
-        {
-            PrepareFile("abalone.txt",8,3,',',1392,1392,1392,true,0,7);
-
-            int MaxEpochs = 3000;
-            int MaxHidden = 16;
-            double MaxLearnRate = 0.1;
-
-            int MinEpochs = 200;
-            int MinHidden = 1;
-            double MinLearnRate = 0.01;
-
-            int StepEpochs = 100;
-            int StepHidden = 1;
-            double StepLearnRate = 0.01;
-
-
-            int epx = ((MaxEpochs-MinEpochs)/StepEpochs)+1;
-            int hidx = ((MaxHidden-MinHidden)/StepHidden)+1;
-            double lrx = ((MaxLearnRate-MinLearnRate)/StepLearnRate)+1;
-
-            int rows = int.Parse((epx * hidx * lrx).ToString());
-
-            MatrixData output = new MatrixData(rows,11);
+            dynamic[,] outputListArray = ToRectangular(outputList.ToArray());
+            
+            MatrixData output = new MatrixData(outputListArray);
             output.ChangeHeader(0,"Epochs");
             output.ChangeHeader(1,"HiddenLayers");
             output.ChangeHeader(2,"eta");
@@ -145,34 +90,6 @@ namespace cli
             output.ChangeHeader(9,"MeanTrain");
             output.ChangeHeader(10,"MedianTest");
 
-            Random rnd1 = new Random(102);
-            int rowNum = 0;
-
-            Parallel.ForEach(SteppedIntegerList(MinEpochs, MaxEpochs, StepEpochs), ep => { 
-                for (int hid = MinHidden; hid<MaxHidden; hid+=StepHidden)
-                {
-                    for (double eta = MinLearnRate; eta<MaxLearnRate; eta+=StepLearnRate)
-                    {
-                        MatrixData runResults = RunNetwork(8,hid,3,ep,eta,rnd1);
-                        output[rowNum,0] = ep;
-                        output[rowNum,1] = hid;
-                        output[rowNum,2] = eta;
-                        output[rowNum,3] = runResults.Max(1);
-                        output[rowNum,4] = runResults.Max(2);
-                        output[rowNum,5] = runResults.Mean(1);
-                        output[rowNum,6] = runResults.Mean(2);
-                        output[rowNum,7] = runResults.Mode(1);
-                        output[rowNum,8] = runResults.Mode(2);
-                        output[rowNum,9] = runResults.Median(1);
-                        output[rowNum,10] = runResults.Median(2);
-                        System.Console.WriteLine(DateTime.Now.ToString() +"("+ rowNum.ToString()+"/"+rows.ToString()+"): "+ep.ToString()+","+hid.ToString()+","+eta.ToString());
-                        rowNum++;
-                    }
-                }} );
-             
-            output.TopSplit(0,rowNum);
-
-            MatrixData m = new MatrixData("abaloneOut.csv",true,true,',');
             MatrixData mCopy = new MatrixData(output,0,0);
             mCopy.Normalize(3);
             mCopy.Normalize(4);
@@ -193,8 +110,8 @@ namespace cli
             output.AddColumn(mCopy.Columns(9),"MedianTrainNorm");
             output.AddColumn(mCopy.Columns(10),"MedianTestNorm");
 
-            //output.NormalizeAll();
-            output.WriteCSV("abaloneOut.csv");
+            output.WriteCSV(dir+file+"Out.csv");
+
         }
 
         static void PrepareFile(string InputFile, int NumberInputsNodes, int NumberOutputNodes, char Delimiter, int train, int test, int val, bool norm, int normStart = 0, int normEnd = 3)
@@ -234,6 +151,21 @@ namespace cli
             {
                 yield return i;
             }
+        }
+        public static dynamic[,] ToRectangular(double[][] array)
+        {
+            int height = array.Length;
+            int width = array[0].Length;
+            dynamic[,] rect = new dynamic[height, width];
+            for (int i = 0; i < height; i++)
+            {
+                dynamic[] row = array[i].ToDynamicArray();
+                for (int j = 0; j < width; j++)
+                {
+                    rect[i, j] = row[j];
+                }
+            }
+            return rect;
         }
     }
 }
