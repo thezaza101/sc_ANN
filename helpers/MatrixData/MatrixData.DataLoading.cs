@@ -107,9 +107,11 @@ namespace helpers
             bool isValueNumaric = true;
             try
             {
-                for (int row = 0; row < NumberOfRows; row++)
+                Random r = new Random();
+                for (int row = 0; row < NumberOfRows/10; row++)
                 {
-                    var o = ConvertToNumeric(_data[row,col].ToString());
+                    
+                    var o = ConvertToNumeric(_data[r.Next(row, NumberOfRows),col].ToString());
                 }
             } 
             catch (Exception)
