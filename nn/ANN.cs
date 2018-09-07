@@ -3,7 +3,7 @@ using helpers;
 using NeuralNetworks;
 using PLplot;
 
-namespace ui
+namespace nn
 {
     public class ANN
     {
@@ -471,15 +471,15 @@ namespace ui
             plot.ptex(xMax-10,5,1.0,0,1,"Learning Rate: "+LearningRate_eta);
             plot.col0(1);
 
-            plot.col0(13);
+            plot.col0(9);
             plot.line(x,y);
-            plot.ptex(xMax-10,35,1.0,0,1,"Pink: Train");
-            plot.col0(13);
+            plot.ptex(xMax-10,35,1.0,0,1,"Blue: Train");
+            plot.col0(9);
             
-            plot.col0(8);
+            plot.col0(3);
             plot.line(x,y1);
-            plot.ptex(xMax-10,30,1.0,0,1,"Brown: Test");
-            plot.col0(8);
+            plot.ptex(xMax-10,30,1.0,0,1,"Green: Test");
+            plot.col0(3);
 
             plot.eop();
 
