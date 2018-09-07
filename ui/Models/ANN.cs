@@ -102,7 +102,7 @@ namespace ui
             _rawData = new MatrixData(InputFile, HasHeaders, true,Delimiter);
             output += "Read: "+InputFile+Environment.NewLine;
             output += "Raw data:"+Environment.NewLine;
-            output +=_rawData.Head(5,16);
+            output +=_rawData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
             return output;
         }
@@ -112,7 +112,7 @@ namespace ui
             string output ="";
             _exemplarData = _rawData.GetExemplar(NumberInputsNodes, NumberOutputNodes, 1);
             output += "Exemplar data:"+Environment.NewLine;
-            output +=_exemplarData.Head(5,16);
+            output +=_exemplarData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
             return output;
         }
@@ -133,7 +133,7 @@ namespace ui
             _trainingData = _exemplarData.CopyData(0,0,NumTrain);
 
             output += "Trainig data:"+Environment.NewLine;
-            output +=_trainingData.Head(5,16);
+            output +=_trainingData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
             return output;
@@ -143,7 +143,7 @@ namespace ui
             string output ="";
             _testingData =_exemplarData.CopyData(NumTrain,0,NumTest);
             output +="Test data:"+Environment.NewLine;
-            output +=_testingData.Head(5,16);
+            output +=_testingData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
             return output;
         }
@@ -152,7 +152,7 @@ namespace ui
             string output ="";
             _validationData = _exemplarData.CopyData(NumTrain+NumTest,0,NumVal);
             output += "Validation data:"+Environment.NewLine;
-            output +=_validationData.Head(5,16);
+            output +=_validationData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
             return output;
         }
@@ -223,7 +223,7 @@ namespace ui
             //_rawData.ChangeHeader(4,"Species");
 
             output += "Raw data:"+Environment.NewLine;
-            output +=_rawData.Head(5,16);
+            output +=_rawData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
             output += "Normalizeing columns 1:4..."+Environment.NewLine;
@@ -233,14 +233,14 @@ namespace ui
             _rawData.Normalize(3);
             
             output += "Normalised data:"+Environment.NewLine;
-            output +=_rawData.Head(5,16);
+            output +=_rawData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
             _exemplarData = _rawData.GetExemplar(NumberInputsNodes, NumberOutputNodes, 1);
             //_exemplarData = _rawData.GetExemplar(4, 2, 1);
             //var _tempExemplarData = new MatrixData()
             output += "Exemplar data:"+Environment.NewLine;
-            output +=_exemplarData.Head(5,16);
+            output +=_exemplarData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
             output += "Suffleing data..."+Environment.NewLine;
@@ -250,20 +250,20 @@ namespace ui
             output += "Setting trainig data as first 50 rows of suffled exemplar data..."+Environment.NewLine;
             _trainingData = _exemplarData.CopyData(0,0,NumTrain);
             output += "Trainig data:"+Environment.NewLine;
-            output +=_trainingData.Head(5,16);
+            output +=_trainingData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
             output += "Setting test data as next 50 rows of suffled exemplar data..."+Environment.NewLine;
             _testingData =_exemplarData.CopyData(NumTrain,0,NumTest);
             output +="Test data:"+Environment.NewLine;
-            output +=_testingData.Head(5,16);
+            output +=_testingData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
 
             output += "Setting validation data as next 50 rows of suffled exemplar data..."+Environment.NewLine;
             _validationData = _exemplarData.CopyData(NumTrain+NumTest,0,NumVal);
             output += "Validation data:"+Environment.NewLine;
-            output +=_validationData.Head(5,16);
+            output +=_validationData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
 
@@ -329,7 +329,7 @@ namespace ui
             _rawData.ChangeHeader(4,"Species");
 
             output += "Raw data:"+Environment.NewLine;
-            output +=_rawData.Head(5,16);
+            output +=_rawData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
             output += "Normalizeing columns 1:4..."+Environment.NewLine;
@@ -339,13 +339,13 @@ namespace ui
             _rawData.Normalize(3);
             
             output += "Normalised data:"+Environment.NewLine;
-            output +=_rawData.Head(5,16);
+            output +=_rawData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
             _exemplarData = _rawData.GetExemplar(4, 3, 1);
 
             output += "Exemplar data:"+Environment.NewLine;
-            output +=_exemplarData.Head(5,16);
+            output +=_exemplarData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
             output += "Suffleing data..."+Environment.NewLine;
@@ -355,20 +355,20 @@ namespace ui
             output += "Setting trainig data as first 50 rows of suffled exemplar data..."+Environment.NewLine;
             _trainingData = _exemplarData.CopyData(0,0,50);
             output += "Trainig data:"+Environment.NewLine;
-            output +=_trainingData.Head(5,16);
+            output +=_trainingData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
             output += "Setting test data as next 50 rows of suffled exemplar data..."+Environment.NewLine;
             _testingData =_exemplarData.CopyData(50,0,50);
             output +="Test data:"+Environment.NewLine;
-            output +=_testingData.Head(5,16);
+            output +=_testingData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
 
             output += "Setting validation data as next 50 rows of suffled exemplar data..."+Environment.NewLine;
             _validationData = _exemplarData.CopyData(100,0,50);
             output += "Validation data:"+Environment.NewLine;
-            output +=_validationData.Head(5,16);
+            output +=_validationData.Head().ToString(5,16);
             output += Environment.NewLine+Environment.NewLine;
 
 

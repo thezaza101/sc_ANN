@@ -7,12 +7,81 @@ namespace helpers
     public partial class MatrixData
     {
         public bool LabeledRows {get;set;} = false;
-        public string Head(int numberOfRows = 5, int colWidth = 10, bool? printRowLabels = null)
+        public MatrixData Head(int numberOfRows = 5)
         {
-            //TODO: Head function should return new MatrixData with the top n rows. This functionality should be in the ToString method.
+            return new MatrixData(this,0,0,numberOfRows,0);
+        }
+        public MatrixData Tail(int numberOfRows = 5)
+        {
+            return new MatrixData(this,NumberOfRows-numberOfRows,0,numberOfRows,0);
+        }
+
+        private static T[,] Make2DArray<T>(T[] input, int numcols =1)
+        {
+            T[,] output = new T[input.Length, numcols];
+            for (int row = 0; row < input.Length; row++)
+            {
+                for (int col = 0; col<numcols;col++)
+                {
+                    output[row,col] = input[row];
+                }
+            }
+            return output;
+        }
+        public void CopyMetaData(MatrixData data)
+        {
+            var copiedHeaders = data._headers.Clone() as string[];
+            var copiedTypes =  data._columnDataTypes.Clone() as Type[];
+            try
+            {
+                for(int i = 0; i<NumberOfColumns;i++)
+                {
+                    this._headers[i] = copiedHeaders[i];
+                    this._columnDataTypes[i] = copiedTypes[i];
+                }
+            }
+            catch
+            {
+
+            }
+        }
+        
+        //https://stackoverflow.com/questions/33417721/convert-a-object-array-into-a-dataset-datatable-in-c-sharp
+        public System.Data.DataTable ToDataTable()
+        {
+            System.Data.DataTable dt = new System.Data.DataTable();
+            for (int col = 0; col < _data.GetLength(1); col++)
+            {
+                dt.Columns.Add(_headers[col]);
+            }
+
+            for (var row = 0; row < _data.GetLength(0); ++row)
+            {
+                System.Data.DataRow r = dt.NewRow();
+                for (var col = 0; col < _data.GetLength(1); ++col)
+                {
+                    r[col] = _data[row, col];
+                }
+                dt.Rows.Add(r);
+            }
+            return dt;
+        }
+
+        public override string ToString()
+        {
+            return ToString(NumberOfRows);
+        }
+        public string ToString(int colWidth)
+        {
+            return ToString(NumberOfRows,colWidth,300,true);
+        }
+
+        public string ToString(int numberOfRows = 5, int colWidth = 10, int maxRows = 300, bool? printRowLabels = null)
+        {
             string output ="";
             bool printRowLabs = (printRowLabels == null)? false : true;
             printRowLabs = (printRowLabs|LabeledRows)? true:false;
+            numberOfRows = (numberOfRows > maxRows)? maxRows : numberOfRows;
             var row1 = (NumberOfColumns*colWidth);
             var row2 = (Convert.ToInt32(printRowLabs)*colWidth);
             int rowWidth = (NumberOfColumns*colWidth)+(Convert.ToInt32(printRowLabs)*colWidth);
@@ -81,66 +150,6 @@ namespace helpers
 
             
             return output;
-        }
-
-        private static T[,] Make2DArray<T>(T[] input, int numcols =1)
-        {
-            T[,] output = new T[input.Length, numcols];
-            for (int row = 0; row < input.Length; row++)
-            {
-                for (int col = 0; col<numcols;col++)
-                {
-                    output[row,col] = input[row];
-                }
-            }
-            return output;
-        }
-        public void CopyMetaData(MatrixData data)
-        {
-            var copiedHeaders = data._headers.Clone() as string[];
-            var copiedTypes =  data._columnDataTypes.Clone() as Type[];
-            try
-            {
-                for(int i = 0; i<NumberOfColumns;i++)
-                {
-                    this._headers[i] = copiedHeaders[i];
-                    this._columnDataTypes[i] = copiedTypes[i];
-                }
-            }
-            catch
-            {
-
-            }
-        }
-        
-        //https://stackoverflow.com/questions/33417721/convert-a-object-array-into-a-dataset-datatable-in-c-sharp
-        public System.Data.DataTable ToDataTable()
-        {
-            System.Data.DataTable dt = new System.Data.DataTable();
-            for (int col = 0; col < _data.GetLength(1); col++)
-            {
-                dt.Columns.Add(_headers[col]);
-            }
-
-            for (var row = 0; row < _data.GetLength(0); ++row)
-            {
-                System.Data.DataRow r = dt.NewRow();
-                for (var col = 0; col < _data.GetLength(1); ++col)
-                {
-                    r[col] = _data[row, col];
-                }
-                dt.Rows.Add(r);
-            }
-            return dt;
-        }
-
-        public override string ToString()
-        {
-            return Head(NumberOfRows);
-        }
-        public string ToString(int colWidth)
-        {
-            return Head(NumberOfRows,colWidth,true);
         }
 
         private List<Type> numaricTypes = new List<Type>{typeof(double),typeof(int),typeof(decimal)};

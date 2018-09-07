@@ -10,7 +10,7 @@ The Code was modified by Mr Robert Cox from the University of Canberra and mysel
 * Allows you to run the process in parts and explore the data to better understand what’s going on. 
 
 ### To do list
-* Make loading/working with large datasets more efficient
+* ~~Make loading/working with large datasets more efficient~~
 * All non-UI code to be run on a background thread to ensure the UI is not locked while processing
 * Progress bar
 

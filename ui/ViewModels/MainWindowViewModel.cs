@@ -38,7 +38,7 @@ namespace ui.ViewModels
         public string OutputMatrixTrain {get {return _ANN.OutputMatrixTrain.ToString(16);}}
         public string OutputMatrixTest {get {return _ANN.OutputMatrixTest.ToString(16);}}
         public string OutputMatrixVal {get {return _ANN.OutputMatrixVal.ToString(16);}}
-        public string GraphData {get {return _ANN.GraphData.ToString(20);}}        
+        public string GraphData {get {return _ANN.GraphData.ToString(_ANN.GraphData.NumberOfRows, 20, 300);}}        
         public string InputFile {get{return _ANN.InputFile;}set{_ANN.InputFile=value;}}
         public string Delimiter {get {return _ANN.Delimiter.ToString();}set{char val = _ANN.Delimiter; char.TryParse(value.ToCharArray().FirstOrDefault().ToString(), out val); _ANN.Delimiter=val;}}
         public bool HasHeaders {get{return _ANN.HasHeaders;}set{_ANN.HasHeaders=value;}}
