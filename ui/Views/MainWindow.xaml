@@ -95,15 +95,15 @@
 					<TextBlock Text="Commands:" Classes="h2" />	
 					<StackPanel Orientation="Horizontal"> 
 						<Button Command="{Binding RunAll}" Content="Run All" Width="75"/>
+						<Button Command="{Binding GeneratePlot}" Content="Plot Data" Width="75"/>
 						<Button Command="{Binding ShowPlot}" Content="Show Plot" Width="75"/>
-						<Button Command="{Binding SaveState}" Content="Save State" Width="75"/>
-						<Button Command="{Binding LoadState}" Content="Load State" Width="75"/>
+						<Button Content="..." Width="75"/>						
 					</StackPanel>
 					<StackPanel Orientation="Horizontal"> 
 						<Button Command="{Binding ClearRawData}" Content="Clear" Width="75"/>
-						<Button Content="..." Width="75"/>
-						<Button Content="..." Width="75"/>
-						<Button Content="..." Width="75"/>
+						<Button Command="{Binding SaveState}" Content="Save State" Width="75"/>
+						<Button Command="{Binding LoadState}" Content="Load State" Width="75"/>
+						<Button Command="{Binding ResetANNMatrixData}" Content="Clear ANN" Width="75"/>
 					</StackPanel>
 					<TextBlock Text=" " Classes="h2" />	
 					<TextBlock Text="Preconfigured ANNs:" Classes="h2" />	

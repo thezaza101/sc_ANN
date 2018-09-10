@@ -108,6 +108,19 @@ namespace ui.ViewModels
 
         }
 
+        public void ResetANNMatrixData()
+        {
+            Log(_ANN.ResetData());
+            UpdateAllProperties();
+
+        }
+
+        public void GeneratePlot()
+        {
+            Log(_ANN.GenerateGraph());
+            OnPropertyChanged("RawOutput");
+        }
+
         public void ShowPlot()
         {
             string filePath = Directory.GetCurrentDirectory()+"\\Test.svg";
@@ -124,6 +137,8 @@ namespace ui.ViewModels
             SetTest();
             SetVal();
             RunNetwork();
+            GeneratePlot();
+            
         }
 
         public void RunIris()
