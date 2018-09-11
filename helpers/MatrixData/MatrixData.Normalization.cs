@@ -50,7 +50,7 @@ namespace helpers
             double min = Min(col);
             double max = Max(col);
 
-            double mult = 1 / (max - min);
+            double mult = (max == min)? 1 : 1 / (max - min);
 
             for (int row = 0; row < NumberOfRows; row++)
             {

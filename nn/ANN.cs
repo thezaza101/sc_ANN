@@ -175,7 +175,14 @@ namespace nn
             nn.InitializeWeights(rnd1);
 
             string dir = "Data\\";
-            nn.train(_trainingData.Data.ToJagged().ToDoubleArray(), _testingData.Data.ToJagged().ToDoubleArray(), epochs, eta, dir+"nnlog.txt");
+            if(!(_testingData == null))
+            {
+                nn.train(_trainingData.Data.ToJagged().ToDoubleArray(), _testingData.Data.ToJagged().ToDoubleArray(), epochs, eta, dir+"nnlog.txt");
+            }
+            else
+            {
+                nn.train(_trainingData.Data.ToJagged().ToDoubleArray(), _trainingData.Data.ToJagged().ToDoubleArray(), epochs, eta, dir+"nnlog.txt");
+            }
             _graphData = nn.GraphData;
         
             double trainAcc = nn.Accuracy(_trainingData.Data.ToJagged().ToDoubleArray(),dir+"trainOut.txt");
@@ -183,10 +190,26 @@ namespace nn
             _confusionMatrixTrain = nn.GetConfusionMatrix();
             _outputMatrixTrain = new MatrixData(dir+"trainOut.txt",false,true,' ');
 
-            double testAcc = nn.Accuracy(_testingData.Data.ToJagged().ToDoubleArray(),dir+"testOut.txt");
-            string ConfusionTest = nn.showConfusion(dir + "testConfusion.txt");
-            _confusionMatrixTest = nn.GetConfusionMatrix();
-            _outputMatrixTest = new MatrixData(dir+"testOut.txt",false,true,' ');
+
+            double testAcc = 0;
+            string ConfusionTest = "";
+            bool testDataExists = false;
+
+            if(!(_testingData == null))
+            {
+                testAcc = nn.Accuracy(_testingData.Data.ToJagged().ToDoubleArray(),dir+"testOut.txt");
+                ConfusionTest = nn.showConfusion(dir + "testConfusion.txt");
+                _confusionMatrixTest = nn.GetConfusionMatrix();
+                _outputMatrixTest = new MatrixData(dir+"testOut.txt",false,true,' ');
+                testDataExists = true;
+            }
+            else
+            {
+                output+= "Testing data is not set, skipping validation step..." + Environment.NewLine;
+            }
+
+
+            
 
 
 
@@ -214,11 +237,11 @@ namespace nn
             output += Environment.NewLine;
 
             output +="Train accuracy = " + trainAcc.ToString("F2")+Environment.NewLine;
-            output +="Test accuracy = " + testAcc.ToString("F2")+Environment.NewLine;
+            output +=(testDataExists)? "Test accuracy = " + testAcc.ToString("F2")+Environment.NewLine : "";
             output +=(valDataExists)? "Val accuracy = " + valAcc.ToString("F2")+Environment.NewLine : "";
             output += Environment.NewLine;
             output +="Train Confusion matrix \r\n"+ConfusionTrain+Environment.NewLine;
-            output +="Test Confusion matrix \r\n"+ConfusionTest+Environment.NewLine;
+            output += (testDataExists)? "Test Confusion matrix \r\n"+ConfusionTest+Environment.NewLine : "";
             output += (valDataExists)? "Val Confusion matrix \r\n"+ConfusionVal+Environment.NewLine : "";
             GenerateGraph();
             return output;

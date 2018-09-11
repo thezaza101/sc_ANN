@@ -18,9 +18,10 @@ namespace cli
 
         static void Main(string[] args)
         {
-            Run("Data\\","Iris",4,3,' ',50,50,50,true,0,3,100,300,100,1,10,1,0.01,0.1,0.01);
-            //Run("Data\\","cancer.txt",9,2,',',227,227,227,true,0,8,100,3000,100,1,16,1,0.01,0.1,0.01);
+            //Run("Data\\","Iris",4,3,' ',50,50,50,true,0,3,100,300,100,1,10,1,0.01,0.1,0.01);
+            //Run("Data\\","cancer.txt",9,2,',',227,228,228,true,0,8,10,100,5,1,4,1,0.01,0.15,0.01);
             //Run("Data\\","abalone.txt",8,3,',',1392,1392,1392,true,0,7,100,3000,100,1,16,1,0.01,0.1,0.01);
+            Run("Data\\","card.txt",51,2,',',230,230,230,true,0,50,50,500,10,1,10,1,0.01,0.10,0.03);
         }
 
         static void Run(string dir, string file, int inputs,
@@ -56,8 +57,11 @@ namespace cli
                 {
                     for (double eta = MinLearnRate; eta<MaxLearnRate; eta+=StepLearnRate)
                     {
-                        MatrixData runResults = RunNetwork(inputs,hid,outputs,ep,eta,rnd1);
-                        double[] d = new double[11];
+                        double trainAcc = 0;
+                        double testAcc = 0;
+                        double valAcc = 0;
+                        MatrixData runResults = RunNetwork(inputs,hid,outputs,ep,eta,rnd1, out trainAcc, out testAcc, out valAcc);
+                        double[] d = new double[14+MaxEp-MinEp];
                         d[0] = ep;
                         d[1] = hid;
                         d[2] = eta;
@@ -69,6 +73,9 @@ namespace cli
                         d[8] = runResults.Mode(1);;
                         d[9] = runResults.Median(1);;
                         d[10] = runResults.Median(2);;
+                        d[11] = trainAcc;
+                        d[12] = testAcc;
+                        d[13] = valAcc;
                         outputList.Add(d);
                         System.Console.WriteLine(DateTime.Now.ToString() +" ("+ rowNum.ToString()+"/"+rows.ToString()+"): "+ep.ToString()+","+hid.ToString()+","+eta.ToString());
                         rowNum++;
@@ -89,6 +96,9 @@ namespace cli
             output.ChangeHeader(8,"ModeTest");
             output.ChangeHeader(9,"MeanTrain");
             output.ChangeHeader(10,"MedianTest");
+            output.ChangeHeader(11,"TrainAcc");
+            output.ChangeHeader(12,"TestAcc");
+            output.ChangeHeader(13,"ValAcc");
 
             MatrixData mCopy = new MatrixData(output,0,0);
             mCopy.Normalize(3);
@@ -136,12 +146,20 @@ namespace cli
             _validationData = _exemplarData.CopyData(train+test,0,val);
         }
 
-        static MatrixData RunNetwork(int num_inputs, int num_hidden, int num_outputs, int epochs, double eta, Random r)
+        static MatrixData RunNetwork(int num_inputs, int num_hidden, int num_outputs, int epochs, double eta, Random r, out double tr, out double te, out double val)
         {
             W4NeuralNetworkTS nn = new W4NeuralNetworkTS(num_inputs, num_hidden, num_outputs, r);
             nn.InitializeWeights(r);
             string dir = "Data\\";
             nn.train(_trainingData.Data.ToJagged().ToDoubleArray(), _testingData.Data.ToJagged().ToDoubleArray(), epochs, eta, dir+"nnlog.txt");
+
+            tr = nn.Accuracy(_trainingData.Data.ToJagged().ToDoubleArray(),dir+"");
+
+            te = nn.Accuracy(_testingData.Data.ToJagged().ToDoubleArray(),dir+"");
+
+            val =  nn.Accuracy(_validationData.Data.ToJagged().ToDoubleArray(),"");
+
+
             return nn.GraphData;
         }
 
