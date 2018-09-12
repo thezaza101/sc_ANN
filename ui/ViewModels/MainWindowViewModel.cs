@@ -96,8 +96,11 @@ namespace ui.ViewModels
         }
         public void RunCommand(object s = null)
         {
-            Log(CurrentCommand);
+            Log("> "+CurrentCommand);
+            Log(_ANN.ParseCommand(CurrentCommand));
             _currentCommand = "";
+
+
             OnPropertyChanged("CurrentCommand");
         }
         

@@ -2,6 +2,7 @@ using System;
 using helpers;
 using NeuralNetworks;
 using PLplot;
+using nn.Parser;
 
 namespace nn
 {
@@ -64,9 +65,15 @@ namespace nn
 
         private MatrixData _graphData;
 
+        private ANNParser Parser;
+
+        public ANN()
+        {
+            Parser = new ANNParser(this);
+        }
         public string ParseCommand(string command)
         {
-            throw new NotImplementedException();
+            return Parser.ParseCommand(command);
         }
 
         public string LoadData()
