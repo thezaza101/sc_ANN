@@ -69,7 +69,7 @@ namespace helpers
 
         public override string ToString()
         {
-            return ToString(NumberOfRows);
+            return ToString(NumberOfRows,10,300,true);
         }
         public string ToString(int colWidth)
         {

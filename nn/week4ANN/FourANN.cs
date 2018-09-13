@@ -414,7 +414,8 @@ namespace NeuralNetworks
             int[] sequence = new int[trainData.Length];
             for (int i = 0; i < sequence.Length; i++) sequence[i] = i;
 
-            using (StreamWriter writer = new StreamWriter(logFileName))
+            
+            using (StreamWriter writer = File.AppendText(logFileName))
             {
 
                 while (epoch < maxEpochs)
