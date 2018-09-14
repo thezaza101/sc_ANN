@@ -43,7 +43,9 @@ namespace nn.Parser
                     return SetCommand(commandComp);
                 case "@":
                     return CallCommand(commandComp);
-                case "//":
+                case "#":
+                    return "";
+                case "##":
                     return command;
                 default:
                     return "Error parsing command: \"" + commandComp[0] + "\"";
@@ -128,6 +130,7 @@ namespace nn.Parser
             switch (commandName)
             {
                 case "print": return print(args[0]);
+                case "printm": return printm(args[0],si(args[1]),si(args[2]),si(args[3]),sb(args[4]));
                 case "updateMatrixHeader": return updateMatrixHeader(args[0], si(args[1]), args[2]);
                 case "normalizeMatrixCol": return normalizeMatrixCol(args[0], si(args[1]), args[2]);
                 case "normalizeMatrixCols": return normalizeMatrixCols(args[0], si(args[1]),si(args[2]), args[3]);         
@@ -155,6 +158,18 @@ namespace nn.Parser
         public string print(string input)
         {
             return Value(input).ToString();
+        }
+
+        public string printm(string matrixRef, int numRows, int colWidth, int maxRows, bool printRowLabs)
+        {
+            var md = Value(matrixRef);
+            if (md.GetType() == typeof(string))
+            {
+                return new MatrixData(new string[]{"E","r","r","o","r"}).ToString();
+            }
+            MatrixData m = (MatrixData)md;
+            return m.ToString(numRows,colWidth,maxRows,printRowLabs);
+
         }
 
         private object Value(string input)
@@ -411,7 +426,7 @@ namespace nn.Parser
             {
                 return matrixTrain.ToString();
             }
-            var matrixTest = Value(matrixTrainRef);
+            var matrixTest = Value(matrixTestRef);
             if (matrixTest.GetType() == typeof(string))
             {
                 return matrixTest.ToString();

@@ -19,9 +19,11 @@ namespace cli
         static void Main(string[] args)
         {
             //Run("Data\\","Iris",4,3,' ',50,50,50,true,0,3,100,300,100,1,10,1,0.01,0.1,0.01);
-            //Run("Data\\","cancer.txt",9,2,',',227,228,228,true,0,8,10,100,5,1,4,1,0.01,0.15,0.01);
+            //Run("Data\\Cancer\\","cancer.txt",9,2,',',227,228,228,true,0,8,10,100,5,1,4,1,0.01,0.15,0.01);
             //Run("Data\\","abalone.txt",8,3,',',1392,1392,1392,true,0,7,100,3000,100,1,16,1,0.01,0.1,0.01);
-            Run("Data\\","card.txt",51,2,',',230,230,230,true,0,50,50,500,10,1,10,1,0.01,0.10,0.03);
+            //Run("Data\\Card\\","card.txt",51,2,',',230,230,230,true,0,50,50,500,10,1,10,1,0.01,0.10,0.03);
+            Run("Data\\WeedSeed\\","weedseed.txt",7,10,',',134,132,132,true,0,6,200,500,50,2,10,2,0.01,0.1,0.01);
+
         }
 
         static void Run(string dir, string file, int inputs,
