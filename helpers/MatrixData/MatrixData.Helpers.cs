@@ -100,7 +100,7 @@ namespace helpers
             }
             output += Environment.NewLine;
 
-            output += new String('-', rowWidth).ToString();
+            output += new String('-', rowWidth-(rowWidth/10)).ToString();
             
             for (int r = 0; r<numberOfRows;r++)
             {

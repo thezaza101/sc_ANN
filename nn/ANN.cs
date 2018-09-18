@@ -172,7 +172,6 @@ namespace nn
             int epochs = NumberOfEpochs; // For tute 3 
             double eta = LearningRate_eta;// learning_rate
 
-            
             output += "Initialising Neural Network with:"+Environment.NewLine;
             output += num_inputs+" inputs, "+num_hidden+" hidden layers, "+num_outputs+" outputs, "+epochs+" epochs, "+eta+" learning eate"+Environment.NewLine;
 
@@ -196,7 +195,6 @@ namespace nn
             _confusionMatrixTrain = nn.GetConfusionMatrix();
             _outputMatrixTrain = new MatrixData(dir+"trainOut.txt",false,true,' ');
 
-
             double testAcc = 0;
             string ConfusionTest = "";
             bool testDataExists = false;
@@ -213,11 +211,6 @@ namespace nn
             {
                 output+= "Testing data is not set, skipping validation step..." + Environment.NewLine;
             }
-
-
-            
-
-
 
             double valAcc = 0;
             string ConfusionVal ="";
