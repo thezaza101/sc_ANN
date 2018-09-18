@@ -25,7 +25,7 @@ namespace ui.Views
             commandTextBox.KeyUp += (s,e) => {
                 if(e.Key == Key.Enter)
                 {
-                    btnCmd.Command.Execute(s);        
+                    btnCmd.Command.Execute(null);        
                     e.Handled = true;                     
                 }
             };

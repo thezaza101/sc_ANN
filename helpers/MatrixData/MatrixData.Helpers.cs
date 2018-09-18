@@ -69,7 +69,7 @@ namespace helpers
 
         public override string ToString()
         {
-            return ToString(NumberOfRows);
+            return ToString(NumberOfRows,10,300,true);
         }
         public string ToString(int colWidth)
         {
@@ -100,7 +100,7 @@ namespace helpers
             }
             output += Environment.NewLine;
 
-            output += new String('-', rowWidth).ToString();
+            output += new String('-', rowWidth-(rowWidth/10)).ToString();
             
             for (int r = 0; r<numberOfRows;r++)
             {

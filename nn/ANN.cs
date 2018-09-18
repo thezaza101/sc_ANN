@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using helpers;
 using NeuralNetworks;
 using PLplot;
@@ -6,7 +7,7 @@ using nn.Parser;
 
 namespace nn
 {
-    public class ANN
+    public partial class ANN
     {
         MatrixData noData = new MatrixData(
             new string[][] 
@@ -47,6 +48,8 @@ namespace nn
         public int NumTest {get;set;} = 50;
         public int NumVal {get;set;} = 50;
 
+        private Dictionary<string,object> vars = new Dictionary<string,object>();
+        
 
 
         private MatrixData _rawData;
@@ -76,11 +79,7 @@ namespace nn
             return Parser.ParseCommand(command);
         }
 
-        public string LoadData()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public string NormalizeData(int col, string method = "StandardScore")
         {
             string output ="";
@@ -173,7 +172,6 @@ namespace nn
             int epochs = NumberOfEpochs; // For tute 3 
             double eta = LearningRate_eta;// learning_rate
 
-            
             output += "Initialising Neural Network with:"+Environment.NewLine;
             output += num_inputs+" inputs, "+num_hidden+" hidden layers, "+num_outputs+" outputs, "+epochs+" epochs, "+eta+" learning eate"+Environment.NewLine;
 
@@ -197,7 +195,6 @@ namespace nn
             _confusionMatrixTrain = nn.GetConfusionMatrix();
             _outputMatrixTrain = new MatrixData(dir+"trainOut.txt",false,true,' ');
 
-
             double testAcc = 0;
             string ConfusionTest = "";
             bool testDataExists = false;
@@ -214,11 +211,6 @@ namespace nn
             {
                 output+= "Testing data is not set, skipping validation step..." + Environment.NewLine;
             }
-
-
-            
-
-
 
             double valAcc = 0;
             string ConfusionVal ="";
@@ -458,6 +450,8 @@ namespace nn
 
             return "Saved \"Test.svg\"";
         }
+
+        
 
         public string ConvertPlotToString()
         {

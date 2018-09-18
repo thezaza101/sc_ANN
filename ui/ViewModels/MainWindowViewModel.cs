@@ -94,10 +94,11 @@ namespace ui.ViewModels
         {
             
         }
-        public void RunCommand(object s = null)
+        public void RunCommand(string commandOverride = "")
         {
-            Log("> "+CurrentCommand);
-            Log(_ANN.ParseCommand(CurrentCommand));
+            string cmd = (string.IsNullOrWhiteSpace(commandOverride))? _currentCommand : commandOverride ;
+            if (!(cmd==commandOverride)) {Log("> "+cmd);}
+            Log(_ANN.ParseCommand(cmd));
             _currentCommand = "";
 
 
@@ -257,6 +258,23 @@ namespace ui.ViewModels
             };
 
             InputFile = ofd.ShowAsync().Result[0];
+
+            if (InputFile.Contains("cscs"))
+            {
+                using (var sr = new StreamReader(InputFile))
+                {
+                    List<string> file = new List<string>();
+                    while (!sr.EndOfStream)
+                    {
+                        file.Add(sr.ReadLine());
+                    }
+
+                    foreach(string s in file)
+                    {
+                        RunCommand(s.Trim());
+                    }
+                }
+            }
             OnPropertyChanged("InputFile");
         }
 
