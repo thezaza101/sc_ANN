@@ -39,7 +39,7 @@ namespace helpers
         }
         public dynamic[] Columns(int col)
         {
-            object[] output = new object[NumberOfRows];
+            dynamic[] output = new dynamic[NumberOfRows];
             for (int row = 0; row<NumberOfRows;row++)
             {
                 output[row] = _data[row,col];
@@ -64,9 +64,10 @@ namespace helpers
             return this.CopyData(0,col,0,1);
         }
 
-        public int IndexOf(int col, dynamic o)
+        public int IndexOf(string colName)
         {
-            return Array.IndexOf(Columns(col),o);
+            return Array.FindIndex(_headers,c => c.Equals(colName));
         }
+        
     }
 }

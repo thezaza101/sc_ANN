@@ -76,29 +76,38 @@ namespace helpers
             return ToString(NumberOfRows,colWidth,300,true);
         }
 
-        public string ToString(int numberOfRows = 5, int colWidth = 10, int maxRows = 300, bool? printRowLabels = null)
+        public string ToString(int numberOfRows = 5, int colWidth = 10, int maxRows = 300, bool? printRowLabels = null, bool printDataTypes = false)
         {
             string output ="";
             bool printRowLabs = (printRowLabels == null)? false : true;
             printRowLabs = (printRowLabs|LabeledRows)? true:false;
+
             numberOfRows = (numberOfRows > maxRows)? maxRows : numberOfRows;
             var row1 = (NumberOfColumns*colWidth);
             var row2 = (Convert.ToInt32(printRowLabs)*colWidth);
             int rowWidth = (NumberOfColumns*colWidth)+(Convert.ToInt32(printRowLabs)*colWidth);
 
             output += (printRowLabs)? ColValue(NumberOfRows.ToString()+"x"+NumberOfColumns.ToString()) + '|' : "";
-            foreach (string h in _headers)
-            {
-                output += ColValue(h) + '|';
-            }
-            output += Environment.NewLine;
+            
+            
+                foreach (string h in _headers)
+                {
+                    output += ColValue(h) + '|';
+                }
+                output += Environment.NewLine;
 
-            output += (printRowLabs)? ColValue("...") + '|' : "";
-            foreach (Type t in _columnDataTypes)
+                
+            
+
+            if (printDataTypes)
             {
-                output += ColValue(t.Name,'-') + '|';
+                output += (printRowLabs)? ColValue("...") + '|' : "";
+                foreach (Type t in _columnDataTypes)
+                {
+                    output += ColValue(t.Name,'-') + '|';
+                }
+                output += Environment.NewLine;
             }
-            output += Environment.NewLine;
 
             output += new String('-', rowWidth-(rowWidth/10)).ToString();
             

@@ -142,7 +142,14 @@ namespace ui.ViewModels
             SetVal();
             RunNetwork();
             GeneratePlot();
-            
+        }
+        public void RunAllNewData()
+        {
+            SuffleExemplar();
+            SetTrain();
+            SetTest();
+            SetVal();
+            RunNetwork();
         }
 
         public void RunIris()
@@ -219,8 +226,6 @@ namespace ui.ViewModels
             OnPropertyChanged("OutputMatrixTest");
             OnPropertyChanged("OutputMatrixVal");
             OnPropertyChanged("GraphData");
-
-
         }
 
         private void SaveState()

@@ -95,14 +95,14 @@ namespace helpers
             _columnDataTypes = new Type[NumberOfColumns];
             for (int col = 0; col < NumberOfColumns; col++)
             {
-                _columnDataTypes[col] = DetermineColType(col);
+                _columnDataTypes[col] = GetColType(col);
             }
         }
-        public void DetermineColTypes(int col)
+        public void DetermineColType(int col)
         {
-            _columnDataTypes[col] = DetermineColType(col);
+            _columnDataTypes[col] = GetColType(col);
         }
-        private Type DetermineColType(int col)
+        private Type GetColType(int col)
         {
             bool isValueNumaric = true;
             try

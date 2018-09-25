@@ -148,9 +148,10 @@ namespace helpers
             }
         }
         //https://stackoverflow.com/questions/30164019/shuffling-2d-array-of-cards
-        public void Suffle()
+        public void Suffle(int? seed = null)
         {
-            Random random = new Random();
+            Random random = seed==null? new Random() : new Random(seed.Value);
+            
             dynamic[][] data = _data.ToJagged();
 
             for (int row = 0; row<NumberOfRows; row++)

@@ -12,16 +12,6 @@ namespace nn.Parser
 {
     public class ANNParser
     {
-        /*
-        set _rawData = LoadFileAsMatrix("Data\Wine.txt"|F|',');
-        set _inputs = int(1);
-        set _copyVar = var(_rawData);
-        @ Print($_copyVar);
-
-        @ Print(1);
-
-        @ Print($_rawData);
-         */
         private ANN _ANN;
         public ANNParser(ANN baseANN)
         {
@@ -29,10 +19,6 @@ namespace nn.Parser
         }
         public string ParseCommand(string command)
         {
-            if (command.Contains("generateNNGraph"))
-            {
-
-            }
             //set, has lhs(varName) and rhs(Command)            
             string[] commandComp = SafeSplitSpaces(command);
 
@@ -134,7 +120,7 @@ namespace nn.Parser
                 case "updateMatrixHeader": return updateMatrixHeader(args[0], si(args[1]), args[2]);
                 case "normalizeMatrixCol": return normalizeMatrixCol(args[0], si(args[1]), args[2]);
                 case "normalizeMatrixCols": return normalizeMatrixCols(args[0], si(args[1]), si(args[2]), args[3]);
-                case "suffleMatrix": return suffleMatrix(args[0]);
+                case "suffleMatrix": return suffleMatrix(args[0], args.Length > 1 ? si(args[1]) : (int?)null);                
                 case "add": return add(args[0], args[1]).ToString();
                 case "subtract": return subtract(args[0], args[1]).ToString();
                 case "multiply": return multiply(args[0], args[1]).ToString();
@@ -392,7 +378,7 @@ namespace nn.Parser
             }
             return "Normalized columns " + colToUpdateFrom + "-" + colToUpdateto + " of " + matrixRef + " using the " + methodString + " method";
         }
-        private string suffleMatrix(string matrixRef)
+        private string suffleMatrix(string matrixRef, int? seed = null)
         {
             var md = Value(matrixRef);
             if (md.GetType() == typeof(string))
@@ -400,7 +386,7 @@ namespace nn.Parser
                 return md.ToString();
             }
             MatrixData m = (MatrixData)md;
-            m.Suffle();
+            m.Suffle(seed);
             return "Suffled matrix \"" + matrixRef + "\"";
         }
         private string initializeNNWeights(string nnRef, Random r)

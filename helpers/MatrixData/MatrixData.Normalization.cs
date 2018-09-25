@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.ComponentModel;
 using System.Collections.Generic;
 
@@ -94,48 +93,5 @@ namespace helpers
             PreformStandardScoreNormalization(col);
         }
 
-        //Finds the minimum value for the given column
-        public double Min(int col)
-        {
-            return GetColumnCopy<double>(col).Min();
-        }
-
-        //Finds the maximum value for the given column
-        public double Max(int col)
-        {
-            return GetColumnCopy<double>(col).Max();
-        }
-
-        //Find the Mean (average) value for the given column
-        public double Mean(int col)
-        {
-            return GetColumnCopy<double>(col).Average();
-        }
-
-        //find the Mode of a column
-        public double Mode(int col)
-        {
-            return GetColumnCopy<double>(col)
-                .GroupBy(v => v)
-                .OrderByDescending(g => g.Count())
-                .First()
-                .Key;
-        }
-
-        //Find the Median of a column 
-        public double Median(int col)
-        {
-            double[] column = GetColumnCopy<double>(col)
-                .OrderByDescending(g => g).ToArray();
-            int mid = NumberOfRows / 2;
-            return (NumberOfRows % 2 != 0) ? (double)column[mid] : ((double)column[mid] + (double)column[mid - 1]) / 2;
-
-        }
-
-        //Find the sum of a column
-        public double Sum(int col)
-        {
-            return GetColumnCopy<double>(col).Sum();
-        }
     }
 }

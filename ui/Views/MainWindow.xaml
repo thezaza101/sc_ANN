@@ -95,9 +95,9 @@
 					<TextBlock Text="Commands:" Classes="h2" />	
 					<StackPanel Orientation="Horizontal"> 
 						<Button Command="{Binding RunAll}" Content="Run All" Width="75"/>
+						<Button Command="{Binding RunAllNewData}" Content="Run (ND)" Width="75"/>
 						<Button Command="{Binding GeneratePlot}" Content="Plot Data" Width="75"/>
-						<Button Command="{Binding ShowPlot}" Content="Show Plot" Width="75"/>
-						<Button Content="..." Width="75"/>						
+						<Button Command="{Binding ShowPlot}" Content="Show Plot" Width="75"/>												
 					</StackPanel>
 					<StackPanel Orientation="Horizontal"> 
 						<Button Command="{Binding ClearRawData}" Content="Clear" Width="75"/>
