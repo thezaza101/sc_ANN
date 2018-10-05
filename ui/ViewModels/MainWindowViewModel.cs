@@ -46,6 +46,14 @@ namespace ui.ViewModels
         public string ColToNormalizeFrom{get{return _colToNormalizeFrom.ToString();}set{int val=_colToNormalizeFrom;int.TryParse(value,out val);_colToNormalizeFrom=val;}}
         private int _colToNormalizeFrom = 0;
 
+        public bool UseRandomSeed {get{return _useRandomSeed;}set{_useRandomSeed=value;}}
+        private bool _useRandomSeed = false;
+
+
+
+        public string RandomSeed{get{return _randomSeed.ToString();}set{int val=_randomSeed;int.TryParse(value,out val);_randomSeed=val;}}
+        private int _randomSeed = 0;
+
         public string ColToNormalizeTo{get{return _colToNormalizeTo.ToString();}set{int val=_colToNormalizeTo;int.TryParse(value,out val);_colToNormalizeTo=val;}}
         private int _colToNormalizeTo = 3;
         public string NumTrain {get { return _ANN.NumTrain.ToString();}set{int val=_ANN.NumTrain;int.TryParse(value,out val);_ANN.NumTrain=val;}}
@@ -84,12 +92,10 @@ namespace ui.ViewModels
             }  
 
         }
-
         private string _currentCommand = "";
 
         private string _rawOutput = "Application started at: " + DateTime.Now.ToString()+Environment.NewLine;
         private ANN _ANN = new ANN();
-
         public MainWindowViewModel()
         {
             
@@ -98,6 +104,12 @@ namespace ui.ViewModels
         {
             string cmd = (string.IsNullOrWhiteSpace(commandOverride))? _currentCommand : commandOverride ;
             if (!(cmd==commandOverride)) {Log("> "+cmd);}
+
+            //Delete me later
+            if(_currentCommand=="xx") SaveExemplar();
+            if(_currentCommand=="yy") SetDataAsExemplar();
+
+
             Log(_ANN.ParseCommand(cmd));
             _currentCommand = "";
 
@@ -173,7 +185,6 @@ namespace ui.ViewModels
             }
             OnPropertyChanged("RawOutput");
             OnPropertyChanged("RawData");
-            
         }
 
         public void SetExemplar()
@@ -184,9 +195,21 @@ namespace ui.ViewModels
             OnPropertyChanged("ExemplarData");
             
         }
+        public void SaveExemplar()
+        {
+            _ANN.ExemplarData.WriteCSV("ex.csv");
+
+        }
+
+        public void SetDataAsExemplar()
+        {
+            _ANN.SetExemplarFromMatrix(new MatrixData(_ANN.RawData,0,0));
+            OnPropertyChanged("ExemplarData");
+        }
         public void SuffleExemplar()
-        {            
-            Log(_ANN.SuffleExemplar());
+        {   
+            int? val = _useRandomSeed? _randomSeed : (int?)null;
+            Log(_ANN.SuffleExemplar(val));
             UpdateAllProperties();
             OnPropertyChanged("RawOutput");
             OnPropertyChanged("ExemplarData");
@@ -228,45 +251,40 @@ namespace ui.ViewModels
             OnPropertyChanged("GraphData");
         }
 
-        private void SaveState()
-        {
-            string output = JsonConvert.SerializeObject(_ANN);
-            StreamWriter sw = new StreamWriter("state.json");
-            sw.Write(output);
-            sw.Close();
-        }
-
-        private void LoadState()
-        {
-            //This does not work yet
-
-            OpenFileDialog ofd = new OpenFileDialog()
-            {
-                Title = "Open file"
-            };
-
-            var result = ofd.ShowAsync().Result;
-
-            StreamReader sr = new StreamReader(result[0]);
-            var file = sr.ReadToEnd();
-            sr.Close();
-            var x = JsonConvert.DeserializeObject<ANN>(file);
-            _ANN = x;
-            UpdateAllProperties();
-        }
-
         public void PickInputFile()
         {
             OpenFileDialog ofd = new OpenFileDialog()
             {
                 Title = "Select File"
             };
-
-            InputFile = ofd.ShowAsync().Result[0];
-
-            if (InputFile.Contains("cscs"))
+            try
             {
-                using (var sr = new StreamReader(InputFile))
+                InputFile = ofd.ShowAsync().Result[0];                
+            }
+            catch
+            {
+
+            }
+
+            OnPropertyChanged("InputFile");
+        }
+
+        public void LoadScript()
+        {
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                Title = "Select File"
+            };
+            ofd.Filters.Add(new FileDialogFilter() { Name = "CSCS Script file", Extensions = { "cscs" } });
+            string scriptFile = null;
+            try
+            {
+                scriptFile = ofd.ShowAsync().Result[0];
+            } catch {}
+
+            if(!string.IsNullOrEmpty(scriptFile))
+            {
+                using (var sr = new StreamReader(scriptFile))
                 {
                     List<string> file = new List<string>();
                     while (!sr.EndOfStream)
@@ -277,10 +295,11 @@ namespace ui.ViewModels
                     foreach(string s in file)
                     {
                         RunCommand(s.Trim());
+                        OnPropertyChanged("RawOutput");
                     }
                 }
             }
-            OnPropertyChanged("InputFile");
+            
         }
 
         private void Log(string entry)

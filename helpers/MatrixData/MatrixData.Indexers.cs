@@ -43,7 +43,7 @@ namespace helpers
             for (int row = 0; row<NumberOfRows;row++)
             {
                 output[row] = _data[row,col];
-            }
+            }   
             return output;
         }
 
@@ -68,6 +68,5 @@ namespace helpers
         {
             return Array.FindIndex(_headers,c => c.Equals(colName));
         }
-        
     }
 }

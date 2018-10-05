@@ -32,11 +32,11 @@ namespace helpers
                     "what you did to cause this error");
             }
         }
-        public void NormalizeAll(NormalizationMethod method = NormalizationMethod.StandardScore)
+        public void NormalizeAll(NormalizationMethod method = NormalizationMethod.StandardScore, bool ignoreDT = false)
         {
             for (int col = 0; col < NumberOfColumns; col++)
             {
-                if (IsValueNumaric(col))
+                if (IsValueNumaric(col)|ignoreDT)
                 {
                     Normalize(col, method);
                 }

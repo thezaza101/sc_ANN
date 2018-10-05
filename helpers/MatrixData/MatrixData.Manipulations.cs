@@ -148,6 +148,7 @@ namespace helpers
             }
         }
         //https://stackoverflow.com/questions/30164019/shuffling-2d-array-of-cards
+        
         public void Suffle(int? seed = null)
         {
             Random random = seed==null? new Random() : new Random(seed.Value);
@@ -240,6 +241,21 @@ namespace helpers
             return exemplarData;
         }
 
+        public dynamic[] GetVectorizedMatrix()
+        {
+            dynamic[] output = new dynamic[NumberOfRows*NumberOfColumns];
+            int outputCounter = 0;
+            for (int r = 0; r<NumberOfRows;r++)
+            {
+                for (int c = 0; c<NumberOfColumns;c++)
+                {
+                    output[outputCounter] = _data[r,c];
+                    outputCounter++;
+                }
+            }
+            return output;
+        }
+        
         public void Sort(int col, bool acen = true)
         {
             if(acen)

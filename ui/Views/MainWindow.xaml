@@ -42,8 +42,12 @@
 							<Button Command="{Binding NormalizeData}" Content="Normalize column" Width="100"/>
 						</StackPanel>
 						<Button Command="{Binding SetExemplar}" Content="Set Exemplar" Width="300"/>
-						<Button Command="{Binding SuffleExemplar}" Content="Suffle Exemplar" Width="300"/>
-
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="Use seed:" Width="75"/>
+							<CheckBox IsChecked="{Binding UseRandomSeed}" Width="25"/>
+							<TextBox Text="{Binding RandomSeed, Mode=TwoWay}" AcceptsReturn="False" TextWrapping="Wrap" Width="50" />
+							<Button Command="{Binding SuffleExemplar}" Content="Suffle Exemplar" Width="150"/>
+						</StackPanel>
 
 						<StackPanel Orientation="Horizontal">
 							<TextBlock Text="# Train:" Width="100"/>
@@ -101,9 +105,9 @@
 					</StackPanel>
 					<StackPanel Orientation="Horizontal"> 
 						<Button Command="{Binding ClearRawData}" Content="Clear" Width="75"/>
-						<Button Command="{Binding SaveState}" Content="Save State" Width="75"/>
-						<Button Command="{Binding LoadState}" Content="Load State" Width="75"/>
 						<Button Command="{Binding ResetANNMatrixData}" Content="Clear ANN" Width="75"/>
+						<Button Command="{Binding LoadScript}" Content="Run Script" Width="75"/>
+						<Button Content="..." Width="75"/>
 					</StackPanel>
 					<TextBlock Text=" " Classes="h2" />	
 					<TextBlock Text="Preconfigured ANNs:" Classes="h2" />	

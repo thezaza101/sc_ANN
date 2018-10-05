@@ -122,12 +122,16 @@ namespace nn
             output += Environment.NewLine+Environment.NewLine;
             return output;
         }
+        public void SetExemplarFromMatrix(MatrixData input)
+        {
+            _exemplarData = input;
+        }
 
-        public string SuffleExemplar()
+        public string SuffleExemplar(int? seed)
         {
             string output ="";
             output += "Suffleing data..."+Environment.NewLine;
-            _exemplarData.Suffle();
+            _exemplarData.Suffle(seed);
             output += Environment.NewLine;
             return output;
         }
@@ -245,7 +249,6 @@ namespace nn
             GenerateGraph();
             return output;
         }
-
         public string ResetData()
         {
             string output ="";
@@ -281,7 +284,6 @@ namespace nn
 
             return output;
         }
-
         public string RunIris()
         {
             string output ="";
@@ -386,7 +388,6 @@ namespace nn
             GenerateGraph();
             return output;
         }
-
         public string GenerateGraph()
         {
             double[] x = _graphData.GetColumnCopy<double>(0);
@@ -450,14 +451,5 @@ namespace nn
 
             return "Saved \"Test.svg\"";
         }
-
-        
-
-        public string ConvertPlotToString()
-        {
-            throw new NotImplementedException();
-        }
-
-        
     }
 }

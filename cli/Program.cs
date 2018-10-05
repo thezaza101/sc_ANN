@@ -8,14 +8,44 @@ namespace cli
 {
     class Program
     {
+        
         private static ANN _ANN = new ANN();
         static void Main(string[] args)
         {
-            int[] sArray = new int[]{1,2,3};
-            SomeMethod(sArray[0]);
-            SomeMethod(sArray[1]);
-            SomeMethod(sArray[2]);
-            SomeMethod(sArray.Skip(3).Select(z => (int?)z).FirstOrDefault());
+            TaskFivePreProcess t = new TaskFivePreProcess();
+            //t.Run("Data\\Process4.csv");
+            //t.Run("Data\\FaceDataBoth.csv");
+
+            /*t.ProcessFile("Data\\trainFaceData255.csv", "Data\\1trainFaceDataFinal.csv",1);
+            t.ProcessFile("Data\\trainNoFaceData255.csv", "Data\\1trainNoFaceDataFinal.csv",1);
+            t.ProcessFile("Data\\testFaceData255.csv", "Data\\1testFaceDataFinal.csv",1);
+            t.ProcessFile("Data\\testNoFaceData255.csv", "Data\\1testNoFaceDataFinal.csv",1);
+
+            t.ProcessFile("Data\\trainFaceData255.csv", "Data\\2trainFaceDataFinal.csv",2);
+            t.ProcessFile("Data\\trainNoFaceData255.csv", "Data\\2trainNoFaceDataFinal.csv",2);
+            t.ProcessFile("Data\\testFaceData255.csv", "Data\\2testFaceDataFinal.csv",2);
+            t.ProcessFile("Data\\testNoFaceData255.csv", "Data\\2testNoFaceDataFinal.csv",2);
+
+            t.ProcessFile("Data\\trainFaceData255.csv", "Data\\31trainFaceDataFinal.csv",3);
+            t.ProcessFile("Data\\trainNoFaceData255.csv", "Data\\3trainNoFaceDataFinal.csv",3);
+            t.ProcessFile("Data\\testFaceData255.csv", "Data\\3testFaceDataFinal.csv",3);
+            t.ProcessFile("Data\\testNoFaceData255.csv", "Data\\31testNoFaceDataFinal.csv",3);*/
+
+            //t.ProcessFile("Data\\trainFaceData255.csv", "Data\\4trainFaceDataFinal.csv",4);
+            //t.ProcessFile("Data\\trainNoFaceData255.csv", "Data\\4trainNoFaceDataFinal.csv",4);
+            //t.ProcessFile("Data\\testFaceData255.csv", "Data\\4testFaceDataFinal.csv",4);
+            //t.ProcessFile("Data\\testNoFaceData255.csv", "Data\\4testNoFaceDataFinal.csv",4);
+
+            //t.ProcessFile("Data\\trainFaceData255.csv", "Data\\5trainFaceDataFinal.csv",5);
+            //t.ProcessFile("Data\\trainNoFaceData255.csv", "Data\\5trainNoFaceDataFinal.csv",5);
+            //t.ProcessFile("Data\\testFaceData255.csv", "Data\\5testFaceDataFinal.csv",5);
+            //t.ProcessFile("Data\\testNoFaceData255.csv", "Data\\5testNoFaceDataFinal.csv",5);
+            
+            //t.GrayTo255("Data\\testNoFaceData.csv");
+            //t.GrayTo255("Data\\testFaceData.csv");
+            //t.GrayTo255("Data\\trainNoFaceData.csv");
+            //t.GrayTo255("Data\\trainFaceData.csv");
+
 
             
 
@@ -28,7 +58,6 @@ namespace cli
                 ParseCommand(Console.ReadLine());
             }
         }
-        static void SomeMethod(int? s) => Console.WriteLine(s.HasValue);
         static void ParseScript(string scriptPath)
         {
             using (var sr = new StreamReader(scriptPath.Trim()))
@@ -36,7 +65,6 @@ namespace cli
                     while (!sr.EndOfStream)
                     {
                         ParseCommand(sr.ReadLine().Trim());
-
                     }
                 }
         }   

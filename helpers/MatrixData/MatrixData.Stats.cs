@@ -12,6 +12,7 @@ namespace helpers
             return GetColumnCopy<double>(col).Min();
         }
 
+        
         //Finds the maximum value for the given column
         public double Max(int col)
         {

@@ -106,7 +106,54 @@ namespace helpers
             output.Transpose();
             return output;
         }
+        public static MatrixData GetReShapedMatrix(this dynamic[] input, int rowCount)
+        {
+            dynamic[,] outputArray = new dynamic[input.Length/rowCount,rowCount];
+            int inputCounter = 0;
+            for (int r = 0; r<outputArray.GetLength(0);r++)
+            {
+                for (int c = 0; c<outputArray.GetLength(1);c++)
+                {
+                    outputArray[r,c] = input[inputCounter];
+                    inputCounter++;
+                }
+            }
+            return new MatrixData(outputArray);
+        }
         public static string[] Lines(this string input) => input.Split(new [] { '\r', '\n' });
+
+        //https://stackoverflow.com/questions/14683467/finding-the-first-and-third-quartiles
+        internal static double Percentile(this MatrixData input, double p)
+        {
+
+            double[] sortedData = Array.ConvertAll<dynamic, double>(input.GetVectorizedMatrix(), x=> (double)x);
+            Array.Sort(sortedData);
+            
+            // algo derived from Aczel pg 15 bottom
+            if (p >= 100.0d) return sortedData[sortedData.Length - 1];
+
+            double position = (sortedData.Length + 1) * p / 100.0;
+            double leftNumber = 0.0d, rightNumber = 0.0d;
+
+            double n = p / 100.0d * (sortedData.Length - 1) + 1.0d;
+
+            if (position >= 1)
+            {
+                leftNumber = sortedData[(int)Math.Floor(n) - 1];
+                rightNumber = sortedData[(int)Math.Floor(n)];
+            }
+            else
+            {
+                leftNumber = sortedData[0]; // first data
+                rightNumber = sortedData[1]; // first data
+            }
+
+            //if (leftNumber == rightNumber)
+            if (Equals(leftNumber, rightNumber))
+                return leftNumber;
+            double part = n - Math.Floor(n);
+            return leftNumber + part * (rightNumber - leftNumber);
+        }
         
         
     }
