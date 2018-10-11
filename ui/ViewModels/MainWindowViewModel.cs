@@ -38,7 +38,10 @@ namespace ui.ViewModels
         public string OutputMatrixTrain {get {return _ANN.OutputMatrixTrain.ToString(16);}}
         public string OutputMatrixTest {get {return _ANN.OutputMatrixTest.ToString(16);}}
         public string OutputMatrixVal {get {return _ANN.OutputMatrixVal.ToString(16);}}
-        public string GraphData {get {return _ANN.GraphData.ToString(_ANN.GraphData.NumberOfRows, 20, 300);}}        
+        public string GraphData {get {return _ANN.GraphData.ToString(_ANN.GraphData.NumberOfRows, 20, 300);}} 
+        public string RightWrongData {get {return _ANN.RightWrongData.ToString(_ANN.RightWrongData.NumberOfRows, 28, 300);}}  
+        public string WrongData {get {return _ANN.WrongData.ToString(28);}}        
+
         public string InputFile {get{return _ANN.InputFile;}set{_ANN.InputFile=value;}}
         public string Delimiter {get {return _ANN.Delimiter.ToString();}set{char val = _ANN.Delimiter; char.TryParse(value.ToCharArray().FirstOrDefault().ToString(), out val); _ANN.Delimiter=val;}}
         public bool HasHeaders {get{return _ANN.HasHeaders;}set{_ANN.HasHeaders=value;}}
@@ -300,6 +303,15 @@ namespace ui.ViewModels
                 }
             }
             
+        }
+        public void Task3RW()
+        {
+            Log(_ANN.Task3RightWrong());
+            OnPropertyChanged("RawOutput");
+            OnPropertyChanged("RightWrongData");
+            OnPropertyChanged("WrongData");
+
+
         }
 
         private void Log(string entry)

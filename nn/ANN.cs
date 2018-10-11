@@ -32,6 +32,10 @@ namespace nn
         public MatrixData OutputMatrixTest {get{return (_outputMatrixTest==null)? noData : _outputMatrixTest;}}
         public MatrixData OutputMatrixVal {get{return (_outputMatrixVal==null)? noData : _outputMatrixVal;}}
         public MatrixData GraphData {get{return (_graphData==null)? noData : _graphData;}}
+        public MatrixData RightWrongData {get{return (_rightWrongData==null)? noData : _rightWrongData;}}
+        public MatrixData WrongData {get{return (_wrongData==null)? noData : _wrongData;}}
+
+
 
 
         public int NumberInputsNodes {get;set;} = 4; // from iris data set
@@ -67,6 +71,12 @@ namespace nn
         private MatrixData _outputMatrixVal;
 
         private MatrixData _graphData;
+        private MatrixData _rightWrongData;
+        private MatrixData _wrongData;
+
+
+
+        private W4NeuralNetwork nn;
 
         private ANNParser Parser;
 
@@ -180,7 +190,7 @@ namespace nn
             output += num_inputs+" inputs, "+num_hidden+" hidden layers, "+num_outputs+" outputs, "+epochs+" epochs, "+eta+" learning eate"+Environment.NewLine;
 
             Random rnd1 = new Random(102);
-            W4NeuralNetwork nn = new W4NeuralNetwork(num_inputs, num_hidden, num_outputs, rnd1);
+            nn = new W4NeuralNetwork(num_inputs, num_hidden, num_outputs, rnd1);
             nn.InitializeWeights(rnd1);
 
             string dir = "Data\\";
@@ -190,7 +200,7 @@ namespace nn
             }
             else
             {
-                nn.train(_trainingData.Data.ToJagged().ToDoubleArray(), _trainingData.Data.ToJagged().ToDoubleArray(), epochs, eta, dir+"nnlog.txt");
+                nn.train(_trainingData.Data.ToJagged().ToDoubleArray(), _validationData.Data.ToJagged().ToDoubleArray(), epochs, eta, dir+"nnlog.txt");
             }
             _graphData = nn.GraphData;
         
@@ -213,7 +223,7 @@ namespace nn
             }
             else
             {
-                output+= "Testing data is not set, skipping validation step..." + Environment.NewLine;
+                output+= "Testing data is not set, skipping step..." + Environment.NewLine;
             }
 
             double valAcc = 0;
@@ -230,7 +240,7 @@ namespace nn
             }
             else
             {
-                output+= "Validation data is not set, skipping validation step..." + Environment.NewLine;
+                output+= "Validation data is not set, skipping step..." + Environment.NewLine;
             }
 
 
@@ -350,7 +360,7 @@ namespace nn
             output += num_inputs+" inputs, "+num_hidden+" hidden layers, "+num_outputs+" outputs, "+epochs+" epochs, "+eta+" learning eate"+Environment.NewLine;
 
             Random rnd1 = new Random(102);
-            W4NeuralNetwork nn = new W4NeuralNetwork(num_inputs, num_hidden, num_outputs, rnd1);
+            nn = new W4NeuralNetwork(num_inputs, num_hidden, num_outputs, rnd1);
             nn.InitializeWeights(rnd1);
 
             string dir = "Data\\";
@@ -429,7 +439,14 @@ namespace nn
 
 
             plot.col0(1);
-            plot.lab("Epoch","Accuracy %","Test vs Train Accuracy");
+            if(!(_testingData == null))
+            {
+                plot.lab("Epoch","Accuracy %","Test vs Train Accuracy");
+            }
+            else
+            {
+                plot.lab("Epoch","Accuracy %","Test vs Val Accuracy");
+            }
             plot.ptex(xMax-10,25,1.0,0,1,"Input Nodes: "+NumberInputsNodes);
             plot.ptex(xMax-10,20,1.0,0,1,"Hidden Nodes: "+NumberHiddenNodes);
             plot.ptex(xMax-10,15,1.0,0,1,"Output Nodes: "+NumberOutputNodes);
@@ -444,12 +461,61 @@ namespace nn
             
             plot.col0(3);
             plot.line(x,y1);
-            plot.ptex(xMax-10,30,1.0,0,1,"Green: Test");
+            if(!(_testingData == null))
+            {
+                plot.ptex(xMax-10,30,1.0,0,1,"Green: Test");
+            }
+            else
+            {
+                plot.ptex(xMax-10,30,1.0,0,1,"Green: Val");
+            }
             plot.col0(3);
 
             plot.eop();
 
             return "Saved \"Test.svg\"";
+        }
+        public string Task3RightWrong()
+        {
+            nn.rightOrWrong(_validationData, "valResult.txt");
+            _rightWrongData = nn.GetRightOrWrongMatrix(_validationData);
+            MatrixData trainWrongData = nn.GetRightOrWrongMatrix(_trainingData);
+            int rows = _rightWrongData.CountIf(3,MatrixDataExtension.StringEquals,"N") + trainWrongData.CountIf(3,MatrixDataExtension.StringEquals,"N");
+            _wrongData = new MatrixData(rows, trainWrongData.NumberOfColumns);
+
+            int wrongDataCounter = 0;
+
+            for (int r = 0; r<_rightWrongData.NumberOfRows;r++)
+            {
+                if(_rightWrongData[r,3]=="N")
+                {
+                    _wrongData.SetValue(wrongDataCounter,0,_rightWrongData[r,0]);
+                    _wrongData.SetValue(wrongDataCounter,1,_rightWrongData[r,1]);
+                    _wrongData.SetValue(wrongDataCounter,2,_rightWrongData[r,2]);
+                    _wrongData.SetValue(wrongDataCounter,3,_rightWrongData[r,3]);
+                    wrongDataCounter++;
+                }
+            }
+
+            for (int r = 0; r<trainWrongData.NumberOfRows;r++)
+            {
+                if(trainWrongData[r,3]=="N")
+                {
+                    _wrongData.SetValue(wrongDataCounter,0,trainWrongData[r,0]);
+                    _wrongData.SetValue(wrongDataCounter,1,trainWrongData[r,1]);
+                    _wrongData.SetValue(wrongDataCounter,2,trainWrongData[r,2]);
+                    _wrongData.SetValue(wrongDataCounter,3,trainWrongData[r,3]);
+                    wrongDataCounter++;
+                }
+            }
+            _wrongData.ChangeHeader(0, "Row Num");
+            _wrongData.ChangeHeader(1, "Actual");
+            _wrongData.ChangeHeader(2, "Predict");
+            _wrongData.ChangeHeader(3, "Correct?");
+            _wrongData.WriteCSV(DateTime.Now.Ticks+".csv");
+
+
+            return "Saved valResult.txt";
         }
     }
 }

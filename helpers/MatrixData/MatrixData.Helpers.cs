@@ -16,6 +16,11 @@ namespace helpers
             return new MatrixData(this,NumberOfRows-numberOfRows,0,numberOfRows,0);
         }
 
+        public string GetRowName(int index)
+        {
+            return _rowNames[index];
+        }
+
         private static T[,] Make2DArray<T>(T[] input, int numcols =1)
         {
             T[,] output = new T[input.Length, numcols];

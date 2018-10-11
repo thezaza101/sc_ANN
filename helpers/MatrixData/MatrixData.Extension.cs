@@ -122,6 +122,8 @@ namespace helpers
         }
         public static string[] Lines(this string input) => input.Split(new [] { '\r', '\n' });
 
+        public static bool StringEquals(dynamic d, dynamic stringData) => string.Equals((string)d,(string)stringData);
+
         //https://stackoverflow.com/questions/14683467/finding-the-first-and-third-quartiles
         internal static double Percentile(this MatrixData input, double p)
         {

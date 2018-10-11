@@ -50,6 +50,17 @@ namespace helpers
             return GetColumnCopy<double>(col).Sum();
         }
 
+        public int CountIf(int col, Func<dynamic, dynamic, bool> condition, dynamic value)
+        {
+            dynamic[] colData = Columns(col);
+            int counter = 0;
+            foreach (dynamic d in colData)
+            {
+                if(condition(value, d)) counter++;
+            }
+            return counter;
+        }
+        
         // Returns the range of a columns
         public Range ColRange(int col)
         {
@@ -73,5 +84,6 @@ namespace helpers
             return new ColumnSummary(_headers[col],_columnDataTypes[col],ColRange(col),Mean(col),Mode(col),Median(col),UniqueValues(col));
             throw new System.Exception();
         }
+    
     }
 }

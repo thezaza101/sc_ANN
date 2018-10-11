@@ -107,7 +107,7 @@
 						<Button Command="{Binding ClearRawData}" Content="Clear" Width="75"/>
 						<Button Command="{Binding ResetANNMatrixData}" Content="Clear ANN" Width="75"/>
 						<Button Command="{Binding LoadScript}" Content="Run Script" Width="75"/>
-						<Button Content="..." Width="75"/>
+						<Button Command="{Binding Task3RW}" Content="T3RW" Width="75"/>
 					</StackPanel>
 					<TextBlock Text=" " Classes="h2" />	
 					<TextBlock Text="Preconfigured ANNs:" Classes="h2" />	
@@ -183,6 +183,16 @@
 				<TabItem Header="Graph Data">
 					<ScrollViewer>
 						<TextBlock Classes="Code" Text="{Binding GraphData}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+					</ScrollViewer>
+				</TabItem>
+				<TabItem Header="Task 3">
+					<ScrollViewer>
+						<TextBlock Classes="Code" Text="{Binding RightWrongData}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+					</ScrollViewer>
+				</TabItem>
+				<TabItem Header="Task 3 Wrong All">
+					<ScrollViewer>
+						<TextBlock Classes="Code" Text="{Binding WrongData}" HorizontalAlignment="Center" VerticalAlignment="Center" />
 					</ScrollViewer>
 				</TabItem>
 			</TabControl>

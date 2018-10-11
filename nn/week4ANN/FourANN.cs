@@ -383,7 +383,7 @@ namespace NeuralNetworks
 
         // ----------------------------------------------------------------------------------------
         public void momentumAndDecay(double momentumQ, double weightDecayQ)
-        { 
+        {
             momentum = momentumQ;
             weightDecay = weightDecayQ;
         }
@@ -398,12 +398,12 @@ namespace NeuralNetworks
         /// <param name="testdata"></param>
         /// <param name="maxEpochs"></param>
         /// <param name="learnRate"></param>
-        public void train(double[][] trainData, double [][] testData, int maxEpochs, double learnRate, string logFileName)
+        public void train(double[][] trainData, double[][] testData, int maxEpochs, double learnRate, string logFileName)
         {
-            GraphData = new MatrixData(maxEpochs,3);
-            GraphData.ChangeHeader(0,"Epoch");
-            GraphData.ChangeHeader(1,"Train Accuracy");
-            GraphData.ChangeHeader(2,"Test Accuracy");
+            GraphData = new MatrixData(maxEpochs, 3);
+            GraphData.ChangeHeader(0, "Epoch");
+            GraphData.ChangeHeader(1, "Train Accuracy");
+            GraphData.ChangeHeader(2, "Test Accuracy");
             // train a back-prop style NN classifier using learning rate and momentum
             // weight decay reduces the magnitude of a weight value over time unless that value
             // is constantly increased
@@ -414,7 +414,7 @@ namespace NeuralNetworks
             int[] sequence = new int[trainData.Length];
             for (int i = 0; i < sequence.Length; i++) sequence[i] = i;
 
-            
+
             using (StreamWriter writer = File.AppendText(logFileName))
             {
 
@@ -432,8 +432,8 @@ namespace NeuralNetworks
                         ComputeOutputs(xValues); // copy xValues in, compute outputs (store them internally)
                         UpdateWeights(tValues, learnRate); // find better weights
                     } // each training tuple
-                    double trainAccuracy = Accuracy(trainData, "")*100; // *100 to convert to percent
-                    double testAccuracy = Accuracy(testData, "")*100;
+                    double trainAccuracy = Accuracy(trainData, "") * 100; // *100 to convert to percent
+                    double testAccuracy = Accuracy(testData, "") * 100;
                     double trainMse = MeanSquaredError(trainData);
                     double testMse = MeanSquaredError(testData);
                     string linez = epoch.ToString() + " ";
@@ -441,9 +441,9 @@ namespace NeuralNetworks
                     linez = linez + trainAccuracy.ToString("F2") + "% " + testAccuracy.ToString("F2") + "% ";
                     linez = linez + Environment.NewLine;
                     writer.Write(linez);
-                    GraphData[epoch,0] = epoch;
-                    GraphData[epoch,1] = trainAccuracy;
-                    GraphData[epoch,2] = testAccuracy;
+                    GraphData[epoch, 0] = epoch;
+                    GraphData[epoch, 1] = trainAccuracy;
+                    GraphData[epoch, 2] = testAccuracy;
 
                     epoch++;
                 }
@@ -506,7 +506,7 @@ namespace NeuralNetworks
                     if (x != numOutput - 1) retv = retv + "| ";
                 }
                 retv = retv + "\r\n";
-                if (y != numOutput - 1) retv = retv + (new string('-', numOutput*7)) + "\r\n";
+                if (y != numOutput - 1) retv = retv + (new string('-', numOutput * 7)) + "\r\n";
             }
 
             if (fileName.Trim() != "")
@@ -517,17 +517,17 @@ namespace NeuralNetworks
                 }
             }
 
-                return retv;
+            return retv;
         }
 
         public MatrixData GetConfusionMatrix()
         {
-            MatrixData output = new MatrixData(numOutput,numOutput);            
+            MatrixData output = new MatrixData(numOutput, numOutput);
             for (int y = 0; y < numOutput; y++)
             {
                 for (int x = 0; x < numOutput; x++)
                 {
-                    output[x,y] = confusionMatrix[x, y];
+                    output[x, y] = confusionMatrix[x, y];
                 }
             }
             return output;
@@ -538,11 +538,11 @@ namespace NeuralNetworks
         public double Accuracy(double[][] dataSet, string optionalOutFileName)
         {
             // percentage correct using winner-takes all
-            StreamWriter writer=null;
+            StreamWriter writer = null;
             if (optionalOutFileName.Trim() != "")
             {
                 writer = new StreamWriter(optionalOutFileName);
-            } 
+            }
             int numCorrect = 0;
             int numWrong = 0;
             double[] xValues = new double[numInput]; // inputs
@@ -571,9 +571,9 @@ namespace NeuralNetworks
                 if (optionalOutFileName.Trim() != "")
                 {
                     string linez = "";
-                    for (int j = 0; j < numOutput; j++) { linez = linez + tValues[j] +" "; } // expected first
-                    linez = linez + maxIndexExpected+" ";
-                    for (int k = 0; k < numOutput; k++) { linez = linez + yValues[k] +" "; } // actual second
+                    for (int j = 0; j < numOutput; j++) { linez = linez + tValues[j] + " "; } // expected first
+                    linez = linez + maxIndexExpected + " ";
+                    for (int k = 0; k < numOutput; k++) { linez = linez + yValues[k] + " "; } // actual second
                     linez = linez + maxIndexOut;
                     linez = linez + Environment.NewLine;
                     writer.Write(linez);
@@ -597,6 +597,86 @@ namespace NeuralNetworks
                 }
             }
             return bigIndex;
+        }
+
+        public double rightOrWrong(MatrixData input, string OutFileName)
+        {
+            double[][] dataSet = input.Data.ToJagged().ToDoubleArray();
+            // percentage correct using winner-takes all
+            bool result;
+            StreamWriter writer = null;
+            if (OutFileName.Trim() != "")
+            {
+                writer = new StreamWriter(OutFileName);
+            }
+            int numCorrect = 0;
+            int numWrong = 0;
+            double[] xValues = new double[numInput]; // inputs
+            double[] tValues = new double[numOutput]; // targets
+            double[] yValues; // computed Y
+            confusionMatrix = new int[numOutput, numOutput];
+            //confusionMatrixCnt = 0;
+            for (int i = 0; i < dataSet.Length; ++i)
+            {
+                Array.Copy(dataSet[i], xValues, numInput); // parse test data into x-values and t-values
+                Array.Copy(dataSet[i], numInput, tValues, 0, numOutput);
+                yValues = this.ComputeOutputs(xValues);
+                int maxIndexOut = MaxIndex(yValues); // which cell in yValues has largest value?
+                int maxIndexExpected = MaxIndex(tValues); // which cell in yValues has largest value?
+                if (maxIndexOut == maxIndexExpected) { numCorrect++; result = true; }
+                else { numWrong++; result = false; }
+                if (OutFileName.Trim() != "")
+                {
+                    string linez = "";
+                    for (int j = 0; j < dataSet[i].Length; j++)
+                    {
+                        linez = linez + dataSet[i][j].ToString("F6") + " ";
+                    }
+                    linez = linez + "(" + maxIndexOut + " , " + maxIndexExpected + ") ";
+                    if (result) linez = linez + " Correct\r\n"; else linez = linez + " Wrong \r\n";
+                    writer.Write(linez);
+                }
+            }
+            if (OutFileName.Trim() != "") writer.Close();
+            return (numCorrect * 1.0) / (numCorrect + numWrong); // ugly 2 - check for divide by zero note *100 for percent
+        }
+
+        public MatrixData GetRightOrWrongMatrix(MatrixData input)
+        {
+            MatrixData output = new MatrixData(input.NumberOfRows,4);
+            output.ChangeHeader(0,"#");
+            output.ChangeHeader(1,"Actual");
+            output.ChangeHeader(2,"Predict");
+            output.ChangeHeader(3,"Correct?");
+
+
+
+            double[][] dataSet = input.Data.ToJagged().ToDoubleArray();
+            // percentage correct using winner-takes all
+            bool result;
+            int numCorrect = 0;
+            int numWrong = 0;
+            double[] xValues = new double[numInput]; // inputs
+            double[] tValues = new double[numOutput]; // targets
+            double[] yValues; // computed Y
+            confusionMatrix = new int[numOutput, numOutput];
+            //confusionMatrixCnt = 0;
+            for (int i = 0; i < dataSet.Length; ++i)
+            {
+                Array.Copy(dataSet[i], xValues, numInput); // parse test data into x-values and t-values
+                Array.Copy(dataSet[i], numInput, tValues, 0, numOutput);
+                yValues = this.ComputeOutputs(xValues);
+                int maxIndexOut = MaxIndex(yValues); // which cell in yValues has largest value?
+                int maxIndexExpected = MaxIndex(tValues); // which cell in yValues has largest value?
+                if (maxIndexOut == maxIndexExpected) { numCorrect++; result = true; }
+                else { numWrong++; result = false; }
+
+                output.SetValue(i,0,input.GetRowName(i));
+                output.SetValue(i,1,maxIndexOut);
+                output.SetValue(i,2,maxIndexExpected);
+                output.SetValue(i,3,(result)? "Y":"N");
+            }
+            return output;
         }
 
 
