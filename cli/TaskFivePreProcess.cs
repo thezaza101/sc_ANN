@@ -203,9 +203,9 @@ namespace cli
         {
             MatrixData m = new MatrixData(fileName, false, true, ',');
                         
-            for (int i = 0; i <5; i++)
+            for (int i = 0; i <2; i++)
             {
-                OutputSteps(m[i].GetReShapedMatrix(9),i.ToString());
+                OutputSteps(m[i].GetReShapedMatrix(19),i.ToString());
             }
 
             void OutputSteps(MatrixData input, string dir)
@@ -213,18 +213,15 @@ namespace cli
                 string _dir = "Data\\"+dir+"";
 
                 MatrixData pixelMatrix = input;
-                pixelMatrix.Clamp(0,255).UpScale(16).ToImage(_dir+"0.bmp");            
 
-                MatrixData mult = pixelMatrix * averageFace;
-                mult.NormalizeAll(NormalizationMethod.StandardScore, true);
-                mult = mult*255;
-                mult.Clamp(0,255);
-                mult.UpScale(16).ToImage(_dir+"1.bmp");  
+                pixelMatrix.Clamp(0,255).UpScale(16).ToImage(_dir+"0.bmp");             
 
-                mult = mult.ReduceDimensionByOne(0).ReduceDimensionByOne(1);
-                mult.UpScale(16).Clamp(0,255).ToImage(_dir+"2.bmp");  
+                pixelMatrix = pixelMatrix.ReduceDimensionByOne(0).ReduceDimensionByOne(1);
+                pixelMatrix.UpScale(16).Clamp(0,255).ToImage(_dir+"1.bmp");  
 
-                mult.DownScale(2).UpScale(16).Clamp(0,255).ToImage(_dir+"3.bmp");  
+                pixelMatrix = pixelMatrix.Convert18To6Px(false);
+                pixelMatrix.Clamp(0,255);
+                pixelMatrix.UpScale(16).ToImage(_dir+"3.bmp");  
             }
         }
         public void GrayTo255(string fileName)

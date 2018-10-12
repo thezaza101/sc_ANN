@@ -12,9 +12,8 @@ namespace cli
         private static ANN _ANN = new ANN();
         static void Main(string[] args)
         {
-            TaskFivePreProcess t = new TaskFivePreProcess();
-            //t.Run("Data\\Process4.csv");
-            //t.Run("Data\\FaceDataBoth.csv");
+            //TaskFivePreProcess t = new TaskFivePreProcess();
+            //t.Run("Data\\testFaceData255.csv");
 
             /*t.ProcessFile("Data\\trainFaceData255.csv", "Data\\1trainFaceDataFinal.csv",1);
             t.ProcessFile("Data\\trainNoFaceData255.csv", "Data\\1trainNoFaceDataFinal.csv",1);
@@ -45,9 +44,6 @@ namespace cli
             //t.GrayTo255("Data\\testFaceData.csv");
             //t.GrayTo255("Data\\trainNoFaceData.csv");
             //t.GrayTo255("Data\\trainFaceData.csv");
-
-
-            
 
             if (args.Length > 0)
             {
