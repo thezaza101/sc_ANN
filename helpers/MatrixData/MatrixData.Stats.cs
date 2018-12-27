@@ -24,6 +24,17 @@ namespace helpers
         {
             return GetColumnCopy<double>(col).Average();
         }
+        public double MeanIf(int col,Func<double, bool> condition)
+        {
+            double[] vals = GetColumnCopy<double>(col);
+            List<double> outList = new List<double>();
+            foreach (double d in vals)
+            {
+                if (condition(d)) outList.Add(d);
+            }   
+            if(outList.Count > 0) return outList.Average();
+            return 0;
+        }
 
         //find the Mode of a column
         public double Mode(int col)

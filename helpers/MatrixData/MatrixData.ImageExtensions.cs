@@ -311,6 +311,20 @@ namespace helpers
             }
             return colMean.Average();
         }
+        public static double MeanIfPixel (this MatrixData input,Func<double, bool> condition)
+        {
+            List<double> colMean = new List<double>();
+            for (int c = 0; c<input.NumberOfColumns; c++)
+            {
+                double d = input.MeanIf(c,condition);
+                if(condition(d))
+                {
+                    colMean.Add(d);
+                }
+            }
+            return colMean.Average();
+        }
+
         public static double ModePixel (this MatrixData input)
         {
             double[] colMode = new double[input.NumberOfColumns];
@@ -342,5 +356,165 @@ namespace helpers
             }
             return output;
         }
-    }
+
+        public static MatrixData NormalizeAllBetween(this MatrixData input, double min, double max)
+        {
+            MatrixData output = new MatrixData(input,0,0);
+            double mult = (max == min)? 1 : 1 / (max - min);
+            for (int col = 0; col < input.NumberOfColumns; col++)
+            {
+                for (int row = 0; row < input.NumberOfRows; row++)
+                {
+                    double currentVal = input[row, col];
+                    currentVal = (currentVal - min) * mult;
+                    output[row, col] = currentVal;
+                }
+            }
+            return output;
+        }
+        public static MatrixData ToBinary(this MatrixData input, double divider)
+        {
+            MatrixData output = new MatrixData(input,0,0);
+            for(int r = 0; r < output.NumberOfRows; r++)
+            {
+                for (int c = 0; c<output.NumberOfColumns; c++)
+                {
+                    output[r,c] = (output[r,c]>divider)? 255: 0;
+                    
+                }
+            }
+
+            return output;
+        }
+
+        public static MatrixData CalculateDistanceField(this MatrixData input, int searchDistance)
+        {
+            MatrixData output = new MatrixData(input.NumberOfRows,input.NumberOfColumns);
+            for (int r = 0; r < input.NumberOfRows; r++)
+            {
+                for(int c = 0; c < input.NumberOfColumns; c++) 
+                {
+                    //skip black pixels
+                    if (input[r,c]==0) continue;
+
+                    int steps = 0;
+                    int fxMin = Math.Max(r - searchDistance, 0);
+                    int fxMax = Math.Min(r + searchDistance, input.NumberOfRows);
+
+                    int fyMin = Math.Max(c - searchDistance, 0);
+                    int fyMax = Math.Min(c + searchDistance, input.NumberOfColumns);
+                    
+                    for (int fx = fxMin; fx < fxMax-1; ++fx)
+                    {
+                        for (int fy = fyMin; fy < fyMax-1; ++fy)
+                        {
+                            if(input[fx,fy]==255)
+                            {
+                                steps +=((fx - fxMin) + (fy - fyMin));
+                                //int tempStep = ((fx - fxMin) + (fy - fyMin));
+                                //if(tempStep > steps) steps = tempStep;
+                            }
+                        }
+                    }
+                    output[r,c] = steps; 
+                }
+            }
+            return output.HistEQ();
+        }
+
+        public static MatrixData GetLargestBlob(this MatrixData input, ref Tuple<int, int> blobMid)
+        {
+            MatrixData output = new MatrixData(input.NumberOfRows,input.NumberOfColumns);            
+            List<Tuple<int,int>> checkedPixels = new List<Tuple<int, int>>();
+            List<Tuple<int,int>> blobs = new List<Tuple<int, int>>();
+            List<Tuple<int,int>> largestBlob = new List<Tuple<int, int>>();            
+            Random rand = new Random();
+
+            for (int r = 0; r < input.NumberOfRows; r++)
+            {
+                for(int c = 0; c < input.NumberOfColumns; c++) 
+                {
+                    //skip black pixels
+                    if (input[r,c]==0) continue;
+
+                    int replace = rand.Next(256,int.MaxValue);
+                    
+
+                    if (checkedPixels.Count==0)
+                    {
+                        List<Tuple<int,int>> blob = new List<Tuple<int, int>>();
+                        blobs.Add(new Tuple<int, int>(Fill(input,r,c,replace,ref checkedPixels,ref blob), replace)); 
+                        if(blob.Count > largestBlob.Count) largestBlob = blob;
+                    } 
+                    else
+                    {
+                        if(!checkedPixels.Contains(new Tuple<int, int>(r, c)))
+                        {
+                            List<Tuple<int,int>> blob = new List<Tuple<int, int>>();
+                            blobs.Add(new Tuple<int, int>(Fill(input,r,c,replace,ref checkedPixels,ref blob), replace));
+                            if(blob.Count > largestBlob.Count) largestBlob = blob;
+                        }
+                    }                    
+                }
+            }
+            
+            //set the output to only show the largest blob
+            Tuple<int,int> largest = blobs.Where(r => r.Item1 == (blobs.Max(m => m.Item1))).First();
+            for (int r = 0; r < input.NumberOfRows; r++)
+            {
+                for(int c = 0; c < input.NumberOfColumns; c++) 
+                {
+                    output[r,c] = (input[r,c]==largest.Item2)? 255 : 0;
+                }
+            }
+
+            //calculate the center of the largest blob
+            int xMin = largestBlob.Min(m => m.Item1);
+            int xMax = largestBlob.Max(m => m.Item1);
+            int yMin = largestBlob.Min(m => m.Item2);
+            int yMax = largestBlob.Max(m => m.Item2);            
+            int centerX = ((xMax - xMin) / 2) + xMin;
+            int centerY = ((yMax - yMin) / 2) + yMin;
+            blobMid = new Tuple<int, int>(centerX, centerY);
+
+            
+            return output;
+        }
+
+        public static int Fill(MatrixData array, int x, int y, int newInt, ref List<Tuple<int,int>> checkedPixels,ref List<Tuple<int,int>> blobPixels)
+        {
+            int initial = array[x,y];
+            int counter = 0;
+            Queue<Tuple<int,int>> queue = new Queue<Tuple<int,int>>();
+            queue.Enqueue(new Tuple<int, int>(x, y));
+
+            while (queue.Any())
+            {
+                Tuple<int, int> point = queue.Dequeue();
+
+                if (array[point.Item1, point.Item2] != initial)
+                    continue;
+
+                array[point.Item1, point.Item2] = newInt;
+                checkedPixels.Add(point);
+                blobPixels.Add(point);
+                counter++;
+                EnqueueIfMatches(array, queue, point.Item1 - 1, point.Item2, initial);
+                EnqueueIfMatches(array, queue, point.Item1 + 1, point.Item2, initial);
+                EnqueueIfMatches(array, queue, point.Item1, point.Item2 - 1, initial);
+                EnqueueIfMatches(array, queue, point.Item1, point.Item2 + 1, initial);        
+            }
+            return counter;
+        }
+
+        private static void EnqueueIfMatches(MatrixData array, Queue<Tuple<int, int>> queue, int x, int y, int initial)
+        {
+            if (x < 0 || x >= array.Data.GetLength(0) || y < 0 || y >= array.Data.GetLength(1))
+                return;
+
+            if (array[x, y] == initial)
+            queue.Enqueue(new Tuple<int, int>(x, y));
+        }
+    
+    }    
 }
