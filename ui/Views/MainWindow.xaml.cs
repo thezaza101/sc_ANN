@@ -16,8 +16,11 @@ namespace ui.Views
             
             var tbRaw = this.Get<TextBlock>("tbRawOutput");
             tbRaw.PropertyChanged += (s,e) => {
-                var svRaw = this.Get<ScrollViewer>("svRawOutput");
-                svRaw.Offset = new Vector(svRaw.Offset.X, svRaw.Extent.Height -svRaw.Viewport.Height);
+                if (e.Property.Name.ToUpper()=="TEXT")
+                {
+                    var svRaw = this.Get<ScrollViewer>("svRawOutput");
+                    svRaw.Offset = new Vector(svRaw.Offset.X, svRaw.Extent.Height -svRaw.Viewport.Height);
+                }                
             };
 
             Button btnCmd  = this.Get<Button>("btnRunCommand");
