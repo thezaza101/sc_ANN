@@ -147,8 +147,13 @@ namespace helpers
                 }
             }
         }
-        //https://stackoverflow.com/questions/30164019/shuffling-2d-array-of-cards
-        
+        public void ReplaceIf(int row, int col, Func<double, bool> condition, double newVal)
+        {
+            _data[row,col] = condition(_data[row,col])? newVal : _data[row,col];
+        }
+
+
+        //https://stackoverflow.com/questions/30164019/shuffling-2d-array-of-cards        
         public void Suffle(int? seed = null)
         {
             Random random = seed==null? new Random() : new Random(seed.Value);
